@@ -37,7 +37,7 @@ public class AuthService {
         user.setNome(request.nome().trim());
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setRole("USER");
+        user.setRole(request.tipo());
         userRepository.save(user);
     }
 
@@ -48,6 +48,12 @@ public class AuthService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas"));
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas");
+        }
+
+        // Se o front enviar o tipo, ele precisa bater com o tipo do cadastro
+        if (request.tipo() != null && !request.tipo().isBlank()
+                && !request.tipo().equals(user.getRole())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas");
         }
 
