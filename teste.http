@@ -1,0 +1,25 @@
+### 1. Cadastrar usuário
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "nome": "Maria",
+  "email": "maria@teste.com",
+  "password": "123456"
+}
+
+### 2. Login
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "maria@teste.com",
+  "password": "123456"
+}
+
+### 3. Rota protegida (troque COLE_O_TOKEN pelo token do login)
+GET http://localhost:8080/users/me
+Authorization: Bearer COLE_O_TOKEN
+
+### 4. Sem token (deve dar 401)
+GET http://localhost:8080/users/me
