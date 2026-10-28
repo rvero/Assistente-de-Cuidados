@@ -1,0 +1,46 @@
+<ion-content
+  ><main class="app-shell">
+    <header class="home-brand">
+      <div class="home-topline">
+        <p>Assistente de Cuidados</p>
+        <ion-button fill="outline" (click)="sair()">Sair</ion-button>
+      </div>
+      <p>Minha conta</p>
+      <h1>Olá, {{ auth.usuario()?.nome }}</h1>
+      <span class="account-kind">Cuidador</span>
+    </header>
+    <div class="page-body">
+      <section>
+        <div class="section-heading">
+          <h2>Solicitações de cuidado</h2>
+          <span class="soon-tag">Em desenvolvimento</span>
+        </div>
+        <div class="content-card empty-state">
+          <div class="option-icon purple">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M16 27S4 20 4 11a7 7 0 0 1 12-4 7 7 0 0 1 12 4c0 9-12 16-12 16Z" />
+              <path d="M16 11v10m-5-5h10" />
+            </svg>
+          </div>
+          <h3>Recebimento de solicitações</h3>
+          <p>
+            O recebimento de solicitações ainda não está disponível. Você já pode preencher seu perfil profissional e
+            manter suas informações atualizadas.
+          </p>
+        </div>
+      </section>
+      <section class="content-card account-details">
+        <h2>Sua conta</h2>
+        <dl>
+          <dt>Nome</dt>
+          <dd>{{ auth.usuario()?.nome }}</dd>
+          <dt>E-mail</dt>
+          <dd>{{ auth.usuario()?.email }}</dd>
+          <dt>Tipo de conta</dt>
+          <dd>Cuidador</dd>
+        </dl>
+      </section>
+      <ion-button expand="block" routerLink="/perfil">Meu perfil</ion-button>
+    </div>
+  </main></ion-content
+>

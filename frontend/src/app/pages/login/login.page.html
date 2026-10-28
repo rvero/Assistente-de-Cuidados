@@ -1,0 +1,74 @@
+<ion-content
+  ><main class="app-shell">
+    <header class="auth-brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M16 27S4 20 4 11a7 7 0 0 1 12-4 7 7 0 0 1 12 4c0 9-12 16-12 16Z" />
+          <path d="M16 11v10m-5-5h10" />
+        </svg>
+      </div>
+      <h1>Assistente de Cuidados</h1>
+      <p>Para famílias e profissionais de cuidados.</p>
+    </header>
+    <div class="page-body">
+      <nav class="auth-tabs" aria-label="Acesso à conta">
+        <a routerLink="/login" class="active" aria-current="page">Entrar</a><a routerLink="/cadastro">Criar conta</a>
+      </nav>
+
+      @if (sucesso()) {
+      <p class="notice notice-success" role="status">Conta criada. Entre com o e-mail e a senha cadastrados.</p>
+      }
+      <form #form="ngForm" (ngSubmit)="entrar(form)" novalidate>
+        <div class="field">
+          <span class="input-label" id="login-email-label">E-mail</span>
+          <ion-input
+            fill="outline"
+            aria-labelledby="login-email-label"
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            required
+            email
+            autocomplete="email"
+            placeholder="exemplo@email.com"
+            [disabled]="ocupado()"
+          ></ion-input>
+        </div>
+        <div class="field">
+          <span class="input-label" id="login-senha-label">Senha</span>
+          <ion-input
+            fill="outline"
+            aria-labelledby="login-senha-label"
+            [type]="senhaVisivel() ? 'text' : 'password'"
+            name="senha"
+            [(ngModel)]="senha"
+            required
+            autocomplete="current-password"
+            placeholder="Sua senha"
+            [disabled]="ocupado()"
+            ><button
+              class="password-action"
+              slot="end"
+              type="button"
+              (click)="senhaVisivel.set(!senhaVisivel())"
+              [attr.aria-label]="senhaVisivel() ? 'Ocultar senha' : 'Mostrar senha'"
+              [attr.aria-pressed]="senhaVisivel()"
+            >
+              {{ senhaVisivel() ? 'Ocultar' : 'Mostrar' }}
+            </button></ion-input
+          >
+        </div>
+        @if (erro()) {
+        <p class="notice notice-error" role="alert">{{ erro() }}</p>
+        }
+        <ion-button class="form-submit" expand="block" type="submit" [disabled]="ocupado()"
+          >{{ ocupado() ? 'Entrando…' : 'Entrar' }} <span aria-hidden="true">&nbsp;→</span></ion-button
+        >
+      </form>
+      <div class="auth-footer">
+        <ion-button fill="clear" routerLink="/cadastro">Criar conta</ion-button>
+        <p><a routerLink="/inicio">Voltar ao início</a></p>
+      </div>
+    </div>
+  </main></ion-content
+>

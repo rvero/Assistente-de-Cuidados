@@ -1,0 +1,100 @@
+<ion-content
+  ><main class="app-shell">
+    <header class="auth-brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M16 27S4 20 4 11a7 7 0 0 1 12-4 7 7 0 0 1 12 4c0 9-12 16-12 16Z" />
+          <path d="M16 11v10m-5-5h10" />
+        </svg>
+      </div>
+      <h1>Assistente de Cuidados</h1>
+      <p>Para famílias e profissionais de cuidados.</p>
+    </header>
+    <div class="page-body">
+      <nav class="auth-tabs" aria-label="Acesso à conta">
+        <a routerLink="/login">Entrar</a><a routerLink="/cadastro" class="active" aria-current="page">Criar conta</a>
+      </nav>
+      <p class="section-intro">Selecione o tipo de conta e informe seus dados.</p>
+
+      <form #form="ngForm" (ngSubmit)="cadastrar(form)" novalidate>
+        <p class="type-label" id="tipo-label">Tipo de conta</p>
+        <ion-radio-group
+          class="account-types"
+          name="tipo"
+          [(ngModel)]="tipo"
+          required
+          [disabled]="ocupado()"
+          aria-labelledby="tipo-label"
+        >
+          <ion-item lines="none"><ion-radio value="CLIENTE">Família</ion-radio></ion-item>
+          <ion-item lines="none"><ion-radio value="CUIDADOR">Cuidador</ion-radio></ion-item>
+        </ion-radio-group>
+        <div class="field">
+          <span class="input-label" id="cadastro-nome-label">Nome completo</span>
+          <ion-input
+            fill="outline"
+            aria-labelledby="cadastro-nome-label"
+            name="nome"
+            [(ngModel)]="nome"
+            required
+            autocomplete="name"
+            placeholder="Seu nome completo"
+            [disabled]="ocupado()"
+          ></ion-input>
+        </div>
+        <div class="field">
+          <span class="input-label" id="cadastro-email-label">E-mail</span>
+          <ion-input
+            fill="outline"
+            aria-labelledby="cadastro-email-label"
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            required
+            email
+            autocomplete="email"
+            placeholder="exemplo@email.com"
+            [disabled]="ocupado()"
+          ></ion-input>
+        </div>
+        <div class="field">
+          <span class="input-label" id="cadastro-senha-label">Senha</span>
+          <ion-input
+            fill="outline"
+            aria-labelledby="cadastro-senha-label"
+            [type]="senhaVisivel() ? 'text' : 'password'"
+            name="senha"
+            [(ngModel)]="senha"
+            required
+            minlength="6"
+            maxlength="72"
+            autocomplete="new-password"
+            placeholder="Crie sua senha"
+            [disabled]="ocupado()"
+            ><button
+              class="password-action"
+              slot="end"
+              type="button"
+              (click)="senhaVisivel.set(!senhaVisivel())"
+              [attr.aria-label]="senhaVisivel() ? 'Ocultar senha' : 'Mostrar senha'"
+              [attr.aria-pressed]="senhaVisivel()"
+            >
+              {{ senhaVisivel() ? 'Ocultar' : 'Mostrar' }}
+            </button></ion-input
+          >
+          <p class="field-note">A senha deve ter de 6 a 72 caracteres.</p>
+        </div>
+        @if (erro()) {
+        <p class="notice notice-error" role="alert">{{ erro() }}</p>
+        }
+        <ion-button class="form-submit" expand="block" type="submit" [disabled]="ocupado()"
+          >{{ ocupado() ? 'Criando conta…' : 'Criar conta' }} <span aria-hidden="true">&nbsp;→</span></ion-button
+        >
+      </form>
+      <div class="auth-footer">
+        <ion-button fill="clear" routerLink="/login">Já tenho uma conta</ion-button>
+        <p><a routerLink="/inicio">Voltar ao início</a></p>
+      </div>
+    </div>
+  </main></ion-content
+>

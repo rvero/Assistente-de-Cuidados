@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Map;
 
 @RestController
+@RequestMapping({"", "/api"})
 public class AuthController {
 
     private final AuthService authService;

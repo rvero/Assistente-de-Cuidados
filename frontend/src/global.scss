@@ -1,37 +1,484 @@
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
+@import '@ionic/angular/css/core.css';
+@import '@ionic/angular/css/normalize.css';
+@import '@ionic/angular/css/structure.css';
+@import '@ionic/angular/css/typography.css';
+@import '@ionic/angular/css/display.css';
+@import '@ionic/angular/css/padding.css';
+@import '@ionic/angular/css/flex-utils.css';
 
-/* Core CSS required for Ionic components to work properly */
-@import "@ionic/angular/css/core.css";
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+ion-content {
+  --background: #f2f6f5;
+}
+ion-header {
+  box-shadow: none !important;
+}
+ion-toolbar {
+  --min-height: 64px;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --border-width: 0;
+}
+ion-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+ion-button {
+  min-height: 48px;
+  --border-radius: 12px;
+  --box-shadow: none;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  margin: 0;
+}
+ion-button[fill='clear'] {
+  --color: #6c63a8;
+}
+ion-button[fill='outline'] {
+  --border-width: 1px;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+h1 {
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+h2 {
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+h3 {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+p {
+  font-size: 16px;
+  line-height: 1.5;
+}
+a {
+  color: #6c63a8;
+  text-underline-offset: 3px;
+}
+button,
+input,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+a:focus-visible,
+button:focus-visible,
+ion-button:focus-visible,
+ion-radio:focus-visible {
+  outline: 3px solid #6c63a8;
+  outline-offset: 3px;
+}
+.app-shell {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100%;
+  background: #f2f6f5;
+}
+.auth-brand {
+  padding: calc(40px + env(safe-area-inset-top)) 24px 32px;
+  background: linear-gradient(135deg, #2f7d6e, #246458);
+  color: white;
+  text-align: center;
+}
+.brand-icon {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 16px;
+  border-radius: 16px;
+  background: #ffffff26;
+}
+.brand-icon svg {
+  width: 36px;
+  height: 36px;
+}
+.auth-brand p {
+  margin-top: 8px;
+  color: #f2f6f5;
+}
+.page-body {
+  padding: 24px 24px calc(24px + env(safe-area-inset-bottom));
+}
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 4px;
+  background: white;
+  border: 1px solid #c9d6d3;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+.auth-tabs a {
+  display: grid;
+  place-items: center;
+  min-height: 48px;
+  border-radius: 8px;
+  color: #1f2a2e;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: 700;
+}
+.auth-tabs a.active {
+  background: #2f7d6e;
+  color: white;
+}
+.section-intro {
+  color: #52676b;
+  margin-bottom: 24px;
+}
+.field {
+  margin: 0 0 24px;
+}
+.field ion-input {
+  --background: white;
+  --border-color: #c9d6d3;
+  --border-radius: 12px;
+  --border-width: 1px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --highlight-color-focused: #2f7d6e;
+  --highlight-color-valid: #2f7d6e;
+  min-height: 56px;
+  font-size: 16px;
+}
+.field ion-input::part(label) {
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: #1f2a2e;
+}
+.field ion-input.ion-invalid.ion-touched {
+  --border-color: #c24c4c;
+  --highlight-color-invalid: #c24c4c;
+}
+.field-note {
+  font-size: 14px;
+  color: #52676b;
+  margin-top: 8px;
+}
+.password-action {
+  color: #52676b;
+  background: none;
+  border: 0;
+  padding: 0 4px;
+  min-width: 48px;
+  min-height: 48px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.form-submit {
+  margin-top: 8px;
+}
+.auth-footer {
+  padding-top: 16px;
+  text-align: center;
+}
+.auth-footer p {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #52676b;
+}
+.notice {
+  border: 1px solid;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+.notice-error {
+  color: #9a3535;
+  border-color: #c24c4c;
+  background: #fff3f3;
+}
+.notice-success {
+  color: #27622b;
+  border-color: #3e9142;
+  background: #edf7ed;
+}
+.type-label {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.account-types {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.account-types ion-item {
+  --min-height: 56px;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+  --border-width: 0;
+  border: 1px solid #c9d6d3;
+  border-radius: 12px;
+}
+.account-types ion-item:has(.radio-checked) {
+  border-color: #2f7d6e;
+  --background: #e7f2ef;
+}
+.account-types ion-radio {
+  font-size: 16px;
+  width: 100%;
+}
+.profile-options {
+  display: grid;
+  gap: 16px;
+}
+.profile-option {
+  display: grid;
+  grid-template-columns: 48px 1fr 16px;
+  align-items: center;
+  gap: 16px;
+  background: white;
+  border: 1px solid #c9d6d3;
+  border-radius: 16px;
+  padding: 24px 16px;
+  text-decoration: none;
+  color: #1f2a2e;
+}
+.profile-option:hover {
+  border-color: #2f7d6e;
+  background: #fafdfc;
+}
+.option-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  background: #e7f2ef;
+  color: #2f7d6e;
+  border-radius: 12px;
+}
+.option-icon svg {
+  width: 28px;
+  height: 28px;
+}
+.option-icon.purple {
+  color: #6c63a8;
+  background: #eeecf7;
+}
+.profile-option strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.profile-option small {
+  display: block;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #52676b;
+}
+.option-arrow {
+  color: #2f7d6e;
+  font-size: 20px;
+}
+.welcome-copy {
+  margin-bottom: 24px;
+}
+.welcome-copy h2 {
+  margin-bottom: 8px;
+}
+.welcome-copy p {
+  color: #52676b;
+}
+.local-note {
+  margin-top: 24px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  color: #52676b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.local-note svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #2f7d6e;
+}
+.home-brand {
+  padding: calc(24px + env(safe-area-inset-top)) 24px 24px;
+  background: linear-gradient(135deg, #2f7d6e, #246458);
+  color: white;
+}
+.home-topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.home-topline p {
+  font-size: 14px;
+}
+.home-topline ion-button {
+  --color: white;
+  --border-color: #ffffff80;
+  font-size: 14px;
+  min-width: 64px;
+}
+.home-brand h1 {
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+}
+.account-kind {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: #ffffff24;
+  border-radius: 24px;
+  font-size: 14px;
+  margin-top: 16px;
+}
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.section-heading h2 {
+  font-size: 18px;
+}
+.soon-tag {
+  color: #615b84;
+  background: #eeecf7;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 16px;
+  white-space: nowrap;
+}
+.content-card {
+  background: white;
+  border: 1px solid #c9d6d3;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.empty-state {
+  text-align: center;
+}
+.empty-state .option-icon {
+  margin: 0 auto 16px;
+}
+.empty-state h3 {
+  margin-bottom: 8px;
+}
+.empty-state p {
+  color: #52676b;
+  font-size: 14px;
+}
+.account-details dl {
+  margin: 0;
+}
+.account-details dt {
+  color: #52676b;
+  font-size: 14px;
+  margin-top: 16px;
+}
+.account-details dd {
+  margin: 8px 0 0;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.account-details h2 {
+  font-size: 18px;
+}
+.home-help {
+  color: #52676b;
+  font-size: 14px;
+  margin-top: 8px;
+}
+@media (min-width: 600px) {
+  ion-content {
+    --background: #e3ece9;
+  }
+  .app-shell {
+    margin-top: 32px;
+    margin-bottom: 32px;
+    min-height: calc(100% - 64px);
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid #c9d6d3;
+    box-shadow: 0 16px 48px #1f2a2e12;
+  }
+  .auth-brand {
+    padding-top: 40px;
+  }
+  .home-brand {
+    padding-top: 24px;
+  }
+}
+@media (max-width: 359px) {
+  .page-body,
+  .auth-brand,
+  .home-brand {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .profile-option {
+    padding: 16px;
+    gap: 8px;
+    grid-template-columns: 40px 1fr 16px;
+  }
+  .profile-option .option-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
 
-/* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
-
-/* Optional CSS utils that can be commented out */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
-
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+.input-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.field ion-input.input-fill-outline {
+  --border-radius: 12px;
+  --border-color: #c9d6d3;
+  --background: white;
+}
+.field ion-input.has-focus {
+  --border-color: #2f7d6e;
+}
+.profile-subtitle {
+  margin-top: 8px;
+}
+.field ion-textarea,
+.field ion-select {
+  --background: white;
+  --border-color: #c9d6d3;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  width: 100%;
+  font-size: 16px;
+}
+.field ion-select {
+  min-height: 56px;
+}

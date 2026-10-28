@@ -1,0 +1,46 @@
+<ion-content
+  ><main class="app-shell">
+    <header class="home-brand">
+      <div class="home-topline">
+        <p>Assistente de Cuidados</p>
+        <ion-button fill="outline" (click)="sair()">Sair</ion-button>
+      </div>
+      <p>Minha conta</p>
+      <h1>Olá, {{ auth.usuario()?.nome }}</h1>
+      <span class="account-kind">Família</span>
+    </header>
+    <div class="page-body">
+      <section>
+        <div class="section-heading">
+          <h2>Cuidados para sua família</h2>
+          <span class="soon-tag">Em desenvolvimento</span>
+        </div>
+        <div class="content-card empty-state">
+          <div class="option-icon">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <circle cx="12" cy="10" r="4" />
+              <path d="M4 27v-4a8 8 0 0 1 16 0v4M23 7a4 4 0 0 1 0 8m1 4c3 1 4 3 4 7" />
+            </svg>
+          </div>
+          <h3>Busca de cuidadores</h3>
+          <p>
+            A busca de cuidadores ainda não está disponível. Você já pode preencher e atualizar os dados da pessoa que
+            receberá os cuidados.
+          </p>
+        </div>
+      </section>
+      <section class="content-card account-details">
+        <h2>Sua conta</h2>
+        <dl>
+          <dt>Nome</dt>
+          <dd>{{ auth.usuario()?.nome }}</dd>
+          <dt>E-mail</dt>
+          <dd>{{ auth.usuario()?.email }}</dd>
+          <dt>Tipo de conta</dt>
+          <dd>Família</dd>
+        </dl>
+      </section>
+      <ion-button expand="block" routerLink="/perfil">Meu perfil</ion-button>
+    </div>
+  </main></ion-content
+>

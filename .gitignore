@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ferramentas e dados locais
+.local/
+backend/data/

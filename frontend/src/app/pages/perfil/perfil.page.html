@@ -1,0 +1,181 @@
+<ion-content
+  ><main class="app-shell">
+    <header class="home-brand">
+      <div class="home-topline">
+        <p>Assistente de Cuidados</p>
+        <ion-button fill="outline" [routerLink]="auth.home">Voltar</ion-button>
+      </div>
+      <h1>{{ auth.usuario()?.role === 'CLIENTE' ? 'Perfil da família' : 'Perfil profissional' }}</h1>
+      <p class="profile-subtitle">
+        {{ auth.usuario()?.role === 'CLIENTE' ? 'Informe os dados da pessoa que receberá os cuidados.' : 'Apresente sua
+        experiência e suas qualificações.' }}
+      </p>
+    </header>
+    <div class="page-body">
+      @if (carregando()) {
+      <p role="status">Carregando seu perfil…</p>
+      } @else { @if (erro()) {
+      <p class="notice notice-error" role="alert">{{ erro() }}</p>
+      } @if (sucesso()) {
+      <p class="notice notice-success" role="status">{{ sucesso() }}</p>
+      } @if (falhaCarga()) { <ion-button expand="block" (click)="carregar()">Tentar novamente</ion-button> } @else {
+      <p class="section-intro">Os campos marcados com * são obrigatórios.</p>
+      <form #form="ngForm" (ngSubmit)="salvar(form)" novalidate>
+        @if (auth.usuario()?.role === 'CLIENTE') {
+        <div class="field">
+          <span class="input-label" id="perfil-nomePaciente">Nome do paciente *</span
+          ><ion-input
+            fill="outline"
+            aria-labelledby="perfil-nomePaciente"
+            name="nomePaciente"
+            [(ngModel)]="familia.nomePaciente"
+            required
+            maxlength="150"
+            autocomplete="off"
+            [disabled]="salvando()"
+          ></ion-input>
+        </div>
+        <div class="field">
+          <span class="input-label" id="perfil-dataNascimento">Data de nascimento *</span
+          ><ion-input
+            fill="outline"
+            aria-labelledby="perfil-dataNascimento"
+            name="dataNascimento"
+            [(ngModel)]="familia.dataNascimento"
+            required
+            type="date"
+            [disabled]="salvando()"
+          ></ion-input>
+        </div>
+        <div class="field">
+          <span class="input-label" id="perfil-finalidade">Motivo do cuidado *</span
+          ><ion-select
+            cancelText="Cancelar"
+            okText="Confirmar"
+            fill="outline"
+            aria-labelledby="perfil-finalidade"
+            name="finalidade"
+            [(ngModel)]="familia.finalidade"
+            required
+            placeholder="Selecione"
+            [disabled]="salvando()"
+            ><ion-select-option value="assistencia_incapaz">Apoio nas atividades diárias</ion-select-option
+            ><ion-select-option value="pos_operatorio">Recuperação após cirurgia</ion-select-option></ion-select
+          >
+        </div>
+        <div class="field">
+          <span class="input-label" id="perfil-alergias">Alergias e restrições</span
+          ><ion-textarea
+            fill="outline"
+            aria-labelledby="perfil-alergias"
+            name="alergias"
+            [(ngModel)]="familia.alergias"
+            [autoGrow]="true"
+            rows="3"
+            maxlength="5000"
+            [disabled]="salvando()"
+          ></ion-textarea>
+        </div>
+        <div class="field">
+          <span class="input-label" id="perfil-recomendacoes">Orientações para o cuidado</span
+          ><ion-textarea
+            fill="outline"
+            aria-labelledby="perfil-recomendacoes"
+            name="recomendacoes"
+            [(ngModel)]="familia.recomendacoes"
+            [autoGrow]="true"
+            rows="3"
+            maxlength="5000"
+            [disabled]="salvando()"
+          ></ion-textarea>
+        </div>
+        } @else {
+        <div class="field">
+          <span class="input-label" id="perfil-nomeCuidador">Nome completo do cuidador *</span
+          ><ion-input
+            fill="outline"
+            aria-labelledby="perfil-nomeCuidador"
+            name="nomeCuidador"
+            [(ngModel)]="cuidador.nomeCuidador"
+            required
+            maxlength="150"
+            autocomplete="name"
+            [disabled]="salvando()"
+          ></ion-input>
+        </div>
+        <div class="field">
+          <span class="input-label" id="perfil-nomeSocial">Nome social (opcional)</span
+          ><ion-input
+            fill="outline"
+            aria-labelledby="perfil-nomeSocial"
+            name="nomeSocial"
+            [(ngModel)]="cuidador.nomeSocial"
+            maxlength="150"
+            [disabled]="salvando()"
+          ></ion-input>
+        </div>
+        <div class="field">
+          <span class="input-label" id="perfil-genero">Gênero *</span
+          ><ion-select
+            cancelText="Cancelar"
+            okText="Confirmar"
+            fill="outline"
+            aria-labelledby="perfil-genero"
+            name="genero"
+            [(ngModel)]="cuidador.genero"
+            required
+            placeholder="Selecione"
+            [disabled]="salvando()"
+            ><ion-select-option value="masculino">Masculino</ion-select-option
+            ><ion-select-option value="feminino">Feminino</ion-select-option
+            ><ion-select-option value="outro">Outro</ion-select-option></ion-select
+          >
+        </div>
+        <div class="field">
+          <span class="input-label" id="perfil-dataNascimento">Data de nascimento *</span
+          ><ion-input
+            fill="outline"
+            aria-labelledby="perfil-dataNascimento"
+            name="dataNascimento"
+            [(ngModel)]="cuidador.dataNascimento"
+            required
+            type="date"
+            [disabled]="salvando()"
+          ></ion-input>
+        </div>
+        <div class="field">
+          <span class="input-label" id="perfil-descricao">Experiência profissional</span
+          ><ion-textarea
+            fill="outline"
+            aria-labelledby="perfil-descricao"
+            name="descricao"
+            [(ngModel)]="cuidador.descricao"
+            [autoGrow]="true"
+            rows="3"
+            maxlength="5000"
+            [disabled]="salvando()"
+          ></ion-textarea>
+        </div>
+        <div class="field">
+          <span class="input-label" id="perfil-curriculoUrl">Link do currículo (opcional)</span
+          ><ion-input
+            fill="outline"
+            aria-labelledby="perfil-curriculoUrl"
+            name="curriculoUrl"
+            [(ngModel)]="cuidador.curriculoUrl"
+            type="url"
+            maxlength="500"
+            placeholder="https://..."
+            [disabled]="salvando()"
+          ></ion-input>
+        </div>
+        <p class="field-note">Informe o endereço de uma página onde seu currículo possa ser consultado.</p>
+        }
+        <ion-button class="form-submit" expand="block" type="submit" [disabled]="salvando()"
+          >{{ salvando() ? 'Salvando…' : 'Salvar perfil' }}</ion-button
+        >
+      </form>
+      } }
+    </div>
+  </main></ion-content
+>

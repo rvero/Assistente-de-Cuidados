@@ -1,6 +1,7 @@
 package com.projeto.cuidadodeidosos.exception;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -18,7 +19,12 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors()
                 .forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
         return ResponseEntity.badRequest()
-                .body(Map.of("message", "Dados inválidos", "errors", errors));
+                .body(Map.of("message", "Revise os campos indicados.", "errors", errors));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleJson(HttpMessageNotReadableException ex) {
+        return ResponseEntity.badRequest().body(Map.of("message", "Verifique as opções selecionadas e as datas preenchidas."));
     }
 
     @ExceptionHandler(ResponseStatusException.class)

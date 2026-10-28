@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+import jakarta.servlet.DispatcherType;
 
 @Configuration
 @EnableWebSecurity
@@ -30,9 +31,17 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(auth -> auth
+<<<<<<< HEAD
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/cuidador/**").hasRole("CUIDADOR")
                         .requestMatchers("/cliente/**").hasRole("CLIENTE")
+=======
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
+                        .requestMatchers("/", "/index.html", "/inicio", "/login", "/cadastro", "/perfil", "/home-cliente", "/home-cuidador", "/*.js", "/*.css", "/assets/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/auth/**", "/api/auth/**").permitAll()
+                        .requestMatchers("/cuidador/**", "/api/cuidador/**").hasRole("CUIDADOR")
+                        .requestMatchers("/cliente/**", "/api/cliente/**").hasRole("CLIENTE")
+>>>>>>> 2832218 (Atualização frontend e adicionado database)
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -50,7 +59,11 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:3000",
                 "http://localhost:5173",
-                "http://localhost:4200"));
+                "http://localhost:4200",
+                "http://localhost:8100",
+                "http://localhost",
+                "https://localhost",
+                "capacitor://localhost"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
 
