@@ -18,7 +18,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
-    public JwtAuthFilter(JwtService jwtService) {
+    private final com.projeto.cuidadodeidosos.repository.UserRepository users;
+    public JwtAuthFilter(JwtService jwtService, com.projeto.cuidadodeidosos.repository.UserRepository users) {
+        this.users = users;
         this.jwtService = jwtService;
     }
 
@@ -31,7 +33,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             try {
                 Claims claims = jwtService.parse(header.substring(7));
-                String role = claims.get("role", String.class);
+                var user = users.findByEmail(claims.getSubject()).orElse(null);
+                if (user == null || !(claims.get("userId") instanceof Number tokenUserId) || user.getId().longValue() != tokenUserId.longValue()) { chain.doFilter(request, response); return; }
+                Object versionClaim = claims.get("authVersion");
+                int tokenVersion = versionClaim instanceof Number n ? n.intValue() : 0;
+                if (tokenVersion != user.getAuthVersion()) { chain.doFilter(request, response); return; }
+                String role = user.getRole();
                 var auth = new UsernamePasswordAuthenticationToken(
                         claims.getSubject(), null,
                         List.of(new SimpleGrantedAuthority("ROLE_" + role)));

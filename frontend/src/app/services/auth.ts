@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
-import type { Usuario } from './api';
+import type { Usuario, Sessao } from './api';
 import { Api } from './api';
 import { SessionStorage } from './session-storage';
 
@@ -14,10 +14,11 @@ export class Auth {
   token: string | null = null;
   private restoration?: Promise<void>;
   get home(): string {
-    return this.usuario()?.role === 'CUIDADOR' ? '/home-cuidador' : '/home-cliente';
+    if (this.usuario()?.role === 'ADMIN') return '/admin';
+    return this.usuario()?.role === 'CUIDADOR' ? '/home-cuidador' : '/busca';
   }
   private validate(user: Usuario): void {
-    if (!user || !user.nome || !user.email || !['CLIENTE', 'CUIDADOR'].includes(user.role))
+    if (!user || !user.nome || !user.email || !['CLIENTE', 'CUIDADOR', 'ADMIN'].includes(user.role))
       throw new Error('Não foi possível identificar o tipo desta conta. Entre novamente.');
   }
   restaurar(): Promise<void> {
@@ -36,6 +37,9 @@ export class Auth {
   }
   async entrar(email: string, senha: string): Promise<void> {
     const response = await firstValueFrom(this.api.login(email.trim().toLowerCase(), senha));
+    await this.atualizarSessao(response);
+  }
+  async atualizarSessao(response: Sessao): Promise<void> {
     this.validate(response);
     if (!response.token?.trim()) throw new Error('Não foi possível concluir a entrada. Tente novamente.');
     await this.storage.set(response.token);

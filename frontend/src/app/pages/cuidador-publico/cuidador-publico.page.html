@@ -1,0 +1,48 @@
+<ion-content
+  ><main class="app-shell directory-screen">
+    <header class="directory-header">
+      <a routerLink="/busca" class="back-link">← Voltar à busca</a><span class="eyebrow">CONHEÇA O PROFISSIONAL</span>
+      <h1>Perfil do cuidador</h1>
+    </header>
+    <div class="page-body">
+      @if(carregando()){
+      <p role="status">Carregando perfil…</p>
+      }@else if(erro()){
+      <p class="notice notice-error" role="alert">{{erro()}}</p>
+      <ion-button fill="outline" (click)="carregar()">Tentar novamente</ion-button>} @else if(cuidador(); as c){
+      <section class="content-card public-profile">
+        <span class="avatar large" aria-hidden="true">{{c.nome.charAt(0).toUpperCase()}}</span
+        ><span class="profile-label">Cuidador</span>
+        <h2>{{c.nome}}</h2>
+      </section>
+      <section class="content-card profile-section">
+        <h2>Apresentação e experiência</h2>
+        <p class="preserve-lines">{{c.descricao || 'Este profissional ainda não preencheu sua apresentação.'}}</p>
+      </section>
+      @if(safeUrl(c.curriculoUrl); as url){<a
+        class="curriculum-link"
+        [href]="url"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Consultar currículo ↗</a
+      >} @if(!c.perfilCompleto){
+      <p class="field-note">O perfil profissional ainda está sendo preenchido.</p>
+      }} @if(cuidador() && auth.usuario()?.role==='CLIENTE'){
+      <section class="content-card profile-section">
+        <h2>Solicitar contato</h2>
+        <p>Ao solicitar contato, seu nome e e-mail serão compartilhados com este cuidador.</p>
+        @if(contatoEmail()){
+        <p class="notice notice-success" role="status">
+          Seu interesse foi registrado. O cuidador poderá consultar seus dados de contato.
+        </p>
+        <a class="curriculum-link" [href]="'mailto:'+contatoEmail()">Escrever para {{contatoEmail()}} ↗</a>}
+        @else{<ion-button expand="block" (click)="contatar()" [disabled]="enviando()"
+          >{{enviando()?'Registrando…':'Solicitar contato'}}</ion-button
+        >} @if(erroContato()){
+        <p class="notice notice-error" role="alert">{{erroContato()}}</p>
+        }
+      </section>
+      }
+    </div>
+  </main></ion-content
+>

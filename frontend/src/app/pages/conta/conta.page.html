@@ -1,0 +1,196 @@
+<ion-content
+  ><main class="app-shell directory-screen">
+    <header class="directory-header">
+      <a class="back-link" routerLink="/opcoes">← Opções</a>
+      <h1>{{profissional()?'Editar perfil':'Editar dados da conta'}}</h1>
+      <p>
+        {{profissional()?'Organize seus dados pessoais e sua apresentação profissional.':'Atualize seu nome, e-mail, CPF
+        ou senha.'}}
+      </p>
+    </header>
+    <div class="page-body">
+      @if(carregando()){
+      <p role="status">Carregando seus dados…</p>
+      }@else{ @if(erro()){
+      <p class="notice notice-error" role="alert">{{erro()}}</p>
+      }@if(sucesso()){
+      <p class="notice notice-success" role="status">{{sucesso()}}</p>
+      } @if(falhaCarga()){<ion-button (click)="carregar()">Tentar novamente</ion-button>}@else{
+      <form #form="ngForm" (ngSubmit)="salvar(form)" novalidate>
+        <section class="profile-fields" aria-labelledby="dados-sensiveis">
+          <h2 id="dados-sensiveis">{{profissional()?'Dados sensíveis':'Dados da conta'}}</h2>
+          <p class="section-description">
+            {{profissional()?'Estas informações não aparecem no seu perfil público.':'Seus dados de acesso e
+            identificação.'}}
+          </p>
+          <div class="field">
+            <span class="input-label" id="conta-nome">Nome completo</span
+            ><ion-input
+              fill="outline"
+              aria-labelledby="conta-nome"
+              name="nome"
+              [(ngModel)]="nome"
+              required
+              maxlength="255"
+              autocomplete="name"
+              [disabled]="salvando()"
+            />
+          </div>
+          <div class="field">
+            <span class="input-label" id="conta-email">E-mail</span
+            ><ion-input
+              fill="outline"
+              aria-labelledby="conta-email"
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              required
+              email
+              maxlength="255"
+              autocomplete="email"
+              [disabled]="salvando()"
+            />
+          </div>
+          <div class="field">
+            <span class="input-label" id="conta-cpf">CPF</span
+            ><ion-input
+              fill="outline"
+              aria-labelledby="conta-cpf"
+              name="cpf"
+              [(ngModel)]="cpf"
+              required
+              inputmode="numeric"
+              maxlength="14"
+              placeholder="000.000.000-00"
+              [disabled]="salvando()"
+            />
+          </div>
+          <div class="field">
+            <span class="input-label" id="conta-nova-senha">Nova senha</span
+            ><ion-input
+              fill="outline"
+              aria-labelledby="conta-nova-senha"
+              type="password"
+              name="novaSenha"
+              [(ngModel)]="novaSenha"
+              minlength="6"
+              maxlength="72"
+              autocomplete="new-password"
+              [disabled]="salvando()"
+            />
+            <p class="field-note">
+              Deixe em branco para manter sua senha. Uma nova senha deve ter de 6 a 72 caracteres.
+            </p>
+          </div>
+          <div class="field">
+            <span class="input-label" id="conta-senha-atual">Senha atual</span
+            ><ion-input
+              fill="outline"
+              aria-labelledby="conta-senha-atual"
+              type="password"
+              name="senhaAtual"
+              [(ngModel)]="senhaAtual"
+              required
+              autocomplete="current-password"
+              [disabled]="salvando()"
+            />
+            <p class="field-note">Confirme sua senha atual para salvar as alterações.</p>
+          </div>
+          @if(profissional()){
+          <div class="field">
+            <span class="input-label" id="perfil-genero">Gênero</span
+            ><ion-select
+              cancelText="Cancelar"
+              okText="Confirmar"
+              fill="outline"
+              aria-labelledby="perfil-genero"
+              name="genero"
+              [(ngModel)]="cuidador.genero"
+              required
+              placeholder="Selecione"
+              [disabled]="salvando()"
+              ><ion-select-option value="masculino">Masculino</ion-select-option
+              ><ion-select-option value="feminino">Feminino</ion-select-option
+              ><ion-select-option value="outro">Outro</ion-select-option></ion-select
+            >
+          </div>
+          <div class="field">
+            <span class="input-label" id="perfil-dataNascimento">Data de nascimento</span
+            ><ion-input
+              fill="outline"
+              aria-labelledby="perfil-dataNascimento"
+              name="dataNascimento"
+              [(ngModel)]="cuidador.dataNascimento"
+              required
+              type="date"
+              [disabled]="salvando()"
+            ></ion-input>
+          </div>
+          }
+        </section>
+        @if(profissional()){
+        <section class="profile-fields public-fields" aria-labelledby="dados-publicos">
+          <h2 id="dados-publicos">Dados públicos</h2>
+          <p class="section-description">
+            Estas informações poderão ser consultadas pelas famílias na busca de cuidadores.
+          </p>
+          <div class="field">
+            <span class="input-label" id="perfil-nomeCuidador">Nome de apresentação</span
+            ><ion-input
+              fill="outline"
+              aria-labelledby="perfil-nomeCuidador"
+              name="nomeCuidador"
+              [(ngModel)]="cuidador.nomeCuidador"
+              required
+              maxlength="150"
+              autocomplete="name"
+              [disabled]="salvando()"
+            ></ion-input>
+          </div>
+          <div class="field">
+            <span class="input-label" id="perfil-nomeSocial">Nome social (opcional)</span
+            ><ion-input
+              fill="outline"
+              aria-labelledby="perfil-nomeSocial"
+              name="nomeSocial"
+              [(ngModel)]="cuidador.nomeSocial"
+              maxlength="150"
+              [disabled]="salvando()"
+            ></ion-input>
+          </div>
+          <div class="field">
+            <span class="input-label" id="perfil-descricao">Experiência profissional</span
+            ><ion-textarea
+              fill="outline"
+              aria-labelledby="perfil-descricao"
+              name="descricao"
+              [(ngModel)]="cuidador.descricao"
+              [autoGrow]="true"
+              rows="3"
+              maxlength="5000"
+              [disabled]="salvando()"
+            ></ion-textarea>
+          </div>
+          <div class="field">
+            <span class="input-label" id="perfil-curriculoUrl">Link do currículo (opcional)</span
+            ><ion-input
+              fill="outline"
+              aria-labelledby="perfil-curriculoUrl"
+              name="curriculoUrl"
+              [(ngModel)]="cuidador.curriculoUrl"
+              type="url"
+              maxlength="500"
+              placeholder="https://..."
+              [disabled]="salvando()"
+            ></ion-input>
+          </div>
+        </section>
+        }
+        <ion-button type="submit" expand="block" [disabled]="salvando()"
+          >{{salvando()?'Salvando…':'Salvar alterações'}}</ion-button
+        >
+      </form>
+      }}
+    </div>
+  </main></ion-content
+>

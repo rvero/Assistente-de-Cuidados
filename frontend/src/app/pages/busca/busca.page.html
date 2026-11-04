@@ -1,0 +1,52 @@
+<ion-content
+  ><main class="app-shell directory-screen">
+    <header class="directory-header">
+      <span class="eyebrow">ENCONTRE APOIO</span>
+      <h1>Buscar cuidador</h1>
+      <p>Conheça os profissionais cadastrados e consulte suas experiências.</p>
+    </header>
+    <div class="page-body">
+      <label class="search-label" for="busca-cuidador">Nome ou experiência</label>
+      <div class="search-box">
+        <span aria-hidden="true">⌕</span
+        ><input
+          id="busca-cuidador"
+          type="search"
+          placeholder="Quem você procura?"
+          [ngModel]="termo()"
+          (ngModelChange)="termo.set($event)"
+        />
+      </div>
+      @if (carregando()) {
+      <p class="state-message" role="status">Carregando cuidadores…</p>
+      } @else if (erro()) {
+      <div class="notice notice-error" role="alert">{{erro()}}</div>
+      <ion-button fill="outline" (click)="carregar()">Tentar novamente</ion-button>} @else {
+      <p class="result-count" role="status">
+        {{resultados().length}} {{resultados().length === 1 ? 'cuidador encontrado' : 'cuidadores encontrados'}}
+      </p>
+      <div class="carer-list">
+        @for (cuidador of resultados(); track cuidador.id) {
+        <a class="carer-card" [routerLink]="['/cuidadores',cuidador.id]"
+          ><span class="avatar" aria-hidden="true">{{cuidador.nome.charAt(0).toUpperCase()}}</span>
+          <div class="card-copy">
+            <span class="profile-label">Cuidador</span>
+            <h2>{{cuidador.nome}}</h2>
+            <p>{{cuidador.descricao || 'Este profissional ainda não adicionou uma apresentação.'}}</p>
+            <span class="view-profile">Ver perfil <span aria-hidden="true">→</span></span>
+          </div></a
+        >
+        } @empty {
+        <div class="content-card empty-state">
+          <h2>{{termo() ? 'Nenhum resultado para esta busca' : 'Ainda não há cuidadores cadastrados'}}</h2>
+          <p>
+            {{termo() ? 'Tente outro nome ou uma palavra relacionada à experiência.' : 'Os novos profissionais
+            aparecerão aqui assim que criarem uma conta.'}}
+          </p>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </main></ion-content
+>

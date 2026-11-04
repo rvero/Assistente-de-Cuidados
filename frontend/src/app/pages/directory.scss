@@ -1,0 +1,272 @@
+.directory-screen {
+  min-height: 100%;
+  padding-bottom: 24px;
+}
+.directory-header {
+  padding: calc(24px + env(safe-area-inset-top)) 24px 32px;
+  background: #2f7d6e;
+  color: white;
+  border-radius: 0 0 24px 24px;
+}
+.directory-header h1 {
+  margin: 12px 0;
+}
+.directory-header p {
+  color: #ffffffdf;
+}
+.back-link {
+  display: block;
+  color: white;
+  margin-bottom: 24px;
+  text-decoration: none;
+  font-size: 14px;
+}
+.eyebrow {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  font-weight: bold;
+}
+.search-label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.search-box {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid #c9d6d3;
+  border-radius: 12px;
+  padding: 0 16px;
+  min-height: 48px;
+  background: white;
+  margin-bottom: 16px;
+}
+.search-box input {
+  border: 0;
+  background: transparent;
+  min-height: 48px;
+  width: 100%;
+  min-width: 0;
+  font: inherit;
+  color: #1f2a2e;
+}
+.search-box:focus-within {
+  outline: 2px solid #6c63a8;
+}
+.search-box input:focus {
+  outline: none;
+}
+select {
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 12px;
+  border: 1px solid #c9d6d3;
+  border-radius: 12px;
+  background: white;
+  font: inherit;
+}
+.result-count {
+  margin: 16px 0;
+  font-size: 14px;
+  color: #526660;
+}
+.carer-list {
+  display: grid;
+  gap: 16px;
+}
+.carer-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #c9d6d3;
+  border-radius: 16px;
+  background: white;
+  color: #1f2a2e;
+  text-decoration: none;
+}
+.avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e8e5f2;
+  color: #6c63a8;
+  font-size: 24px;
+  font-weight: bold;
+}
+.card-copy {
+  min-width: 0;
+}
+.carer-card h2 {
+  font-size: 18px;
+  margin: 4px 0 8px;
+  overflow-wrap: anywhere;
+}
+.carer-card p {
+  font-size: 14px;
+  color: #526660;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.profile-label {
+  color: #2f7d6e;
+  font-size: 12px;
+  font-weight: bold;
+}
+.view-profile {
+  display: block;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #6c63a8;
+}
+.directory-nav {
+  display: flex;
+  justify-content: space-around;
+  gap: 8px;
+  padding: 16px 12px calc(16px + env(safe-area-inset-bottom));
+  border-top: 1px solid #c9d6d3;
+  margin-top: 24px;
+}
+.directory-nav a {
+  font-size: 13px;
+  text-decoration: none;
+  padding: 12px 4px;
+}
+.directory-nav [aria-current] {
+  color: #2f7d6e;
+  font-weight: bold;
+}
+.public-profile {
+  text-align: center;
+}
+.large {
+  width: 88px;
+  height: 88px;
+  font-size: 36px;
+  margin: 0 auto 16px;
+}
+.public-profile h2 {
+  margin-top: 8px;
+}
+.profile-section {
+  margin-top: 16px;
+}
+.profile-section h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+.preserve-lines {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.curriculum-link {
+  display: block;
+  padding: 16px 0;
+  font-weight: bold;
+}
+.state-message {
+  padding: 24px 0;
+}
+.admin-counts {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.admin-counts div {
+  flex: 1;
+  background: #e2eeea;
+  padding: 16px;
+  border-radius: 12px;
+}
+.admin-counts strong,
+.admin-counts span {
+  display: block;
+}
+.admin-counts strong {
+  font-size: 28px;
+  color: #2f7d6e;
+}
+.admin-counts span {
+  font-size: 14px;
+  margin-top: 4px;
+}
+.admin-card h2 {
+  font-size: 18px;
+  margin: 8px 0;
+}
+.account-email,
+dd {
+  overflow-wrap: anywhere;
+}
+.admin-card details {
+  margin: 16px 0;
+}
+.admin-card summary {
+  color: #6c63a8;
+  cursor: pointer;
+  min-height: 44px;
+  padding-top: 12px;
+}
+dt {
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 16px;
+}
+dd {
+  margin: 4px 0 0;
+  font-size: 14px;
+}
+.delete-button,
+.cancel-button {
+  min-height: 48px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+.delete-button {
+  color: #c24c4c;
+  border: 1px solid #c24c4c;
+  background: white;
+}
+.cancel-button {
+  color: #1f2a2e;
+  border: 1px solid #c9d6d3;
+  background: #f2f6f5;
+}
+.confirm-dialog::backdrop {
+  background: #1f2a2e90;
+}
+.confirm-dialog {
+  border: 0;
+  max-height: calc(100svh - 48px);
+  overflow-y: auto;
+  background: white;
+  color: #1f2a2e;
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+}
+.confirm-dialog p {
+  margin: 16px 0 24px;
+}
+.confirm-dialog button {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+}
+.confirm-dialog .delete-button {
+  background: #c24c4c;
+  color: white;
+}

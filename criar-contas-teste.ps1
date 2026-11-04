@@ -1,8 +1,8 @@
 $ErrorActionPreference = 'Stop'
 $base = 'http://localhost:8081/api'
 $accounts = @(
-    @{ nome = 'Carlos Silva'; email = 'testecuidador@exemplo.com'; password = '123456'; tipo = 'CUIDADOR' },
-    @{ nome = 'Maria Santos'; email = 'testefamilia@exemplo.com'; password = '123456'; tipo = 'CLIENTE' }
+    @{ nome = 'Carlos Silva'; cpf = '52998224725'; email = 'cuidador@mail.com'; password = '123456'; tipo = 'CUIDADOR' },
+    @{ nome = 'Maria Santos'; cpf = '11144477735'; email = 'familia@mail.com'; password = '123456'; tipo = 'CLIENTE' }
 )
 foreach ($account in $accounts) {
     try {
@@ -15,4 +15,3 @@ foreach ($account in $accounts) {
     if ($session.role -ne $account.tipo) { throw ('A conta ' + $account.email + ' possui outro tipo de perfil.') }
     Write-Host ($account.email + ' — conta disponível e login verificado.')
 }
-

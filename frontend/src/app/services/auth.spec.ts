@@ -32,7 +32,7 @@ describe('Auth', () => {
     await auth.entrar(' Maria@Exemplo.com ', 'senha');
     expect(api.login).toHaveBeenCalledWith('maria@exemplo.com', 'senha');
     expect(storage.set).toHaveBeenCalledWith('token');
-    expect(auth.home).toBe('/home-cliente');
+    expect(auth.home).toBe('/busca');
     expect(auth.usuario()).toEqual(user);
   });
   it('não salva sessão quando as credenciais falham', async () => {

@@ -9,6 +9,8 @@ export const authGuard: CanActivateFn = async (route) => {
   const router = inject(Router);
   await auth.restaurar();
   if (!auth.usuario()) return router.parseUrl('/login');
+  if (route.data['profissional'] && auth.usuario()?.role !== 'CUIDADOR')
+    return router.parseUrl(auth.usuario()?.role === 'CLIENTE' ? '/opcoes/conta' : auth.home);
   return !route.data['tipo'] || auth.usuario()?.role === route.data['tipo'] ? true : router.parseUrl(auth.home);
 };
 export const guestGuard: CanActivateFn = async () => {

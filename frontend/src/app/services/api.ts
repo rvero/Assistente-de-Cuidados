@@ -5,15 +5,17 @@ import type { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export type TipoConta = 'CLIENTE' | 'CUIDADOR';
+export type Papel = TipoConta | 'ADMIN';
 export interface Usuario {
   nome: string;
   email: string;
-  role: TipoConta;
+  role: Papel;
 }
 export interface Sessao extends Usuario {
   token: string;
 }
 export interface Cadastro {
+  cpf: string;
   nome: string;
   email: string;
   password: string;

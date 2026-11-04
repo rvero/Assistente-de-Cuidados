@@ -8,7 +8,10 @@ export function authError(error: unknown, context: ErrorContext = 'login'): stri
     if (error.status === 401)
       return context === 'login' ? 'E-mail ou senha inválidos.' : 'Sua sessão expirou. Entre novamente para continuar.';
     if (error.status === 403) return 'Sua conta não tem permissão para acessar estes dados.';
-    if (error.status === 409) return 'Este e-mail já está cadastrado.';
+    if (error.status === 409)
+      return error.error?.message === 'Este CPF já está cadastrado.'
+        ? error.error.message
+        : 'Este e-mail já está cadastrado.';
     if (error.status === 400) return 'Verifique os dados preenchidos e tente novamente.';
     return 'Não foi possível concluir a solicitação. Tente novamente em instantes.';
   }

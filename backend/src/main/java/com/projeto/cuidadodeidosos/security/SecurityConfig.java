@@ -24,26 +24,24 @@ import jakarta.servlet.DispatcherType;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http, JwtService jwtService) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, JwtService jwtService, com.projeto.cuidadodeidosos.repository.UserRepository users) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(auth -> auth
-<<<<<<< HEAD
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/cuidador/**").hasRole("CUIDADOR")
-                        .requestMatchers("/cliente/**").hasRole("CLIENTE")
-=======
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/", "/index.html", "/inicio", "/login", "/cadastro", "/perfil", "/home-cliente", "/home-cuidador", "/*.js", "/*.css", "/assets/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/", "/index.html", "/inicio", "/login", "/cadastro", "/perfil", "/home-cliente", "/home-cuidador", "/busca", "/cuidadores/*", "/admin", "/historico", "/contatos", "/opcoes", "/opcoes/conta", "/*.js", "/*.css", "/assets/**", "/favicon.ico").permitAll()
                         .requestMatchers("/auth/**", "/api/auth/**").permitAll()
                         .requestMatchers("/cuidador/**", "/api/cuidador/**").hasRole("CUIDADOR")
                         .requestMatchers("/cliente/**", "/api/cliente/**").hasRole("CLIENTE")
->>>>>>> 2832218 (Atualização frontend e adicionado database)
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/conta", "/api/conta/**").hasAnyRole("CLIENTE", "CUIDADOR")
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/cuidadores/*/contato").hasRole("CLIENTE")
+                        .requestMatchers("/api/contatos").hasRole("CUIDADOR")
                         .anyRequest().authenticated())
-                .addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthFilter(jwtService, users), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

@@ -1,0 +1,117 @@
+<ion-content
+  ><main class="app-shell directory-screen">
+    <header class="directory-header">
+      <div class="home-topline">
+        <span class="eyebrow">ADMINISTRAÇÃO</span><ion-button fill="outline" (click)="sair()">Sair</ion-button>
+      </div>
+      <h1>Gerenciar contas</h1>
+      <p>Consulte os cadastros de famílias e cuidadores.</p>
+    </header>
+    <div class="page-body">
+      <div class="admin-counts">
+        <div><strong>{{familias()}}</strong><span>Famílias</span></div>
+        <div><strong>{{cuidadores()}}</strong><span>Cuidadores</span></div>
+      </div>
+      <label class="search-label" for="busca-conta">Buscar conta</label>
+      <div class="search-box">
+        <input
+          id="busca-conta"
+          type="search"
+          placeholder="Nome, e-mail ou CPF"
+          [ngModel]="termo()"
+          (ngModelChange)="termo.set($event)"
+        />
+      </div>
+      <label class="search-label" for="tipo-conta">Tipo de conta</label
+      ><select id="tipo-conta" [ngModel]="tipo()" (ngModelChange)="tipo.set($event)">
+        <option value="">Todos os perfis</option>
+        <option value="CLIENTE">Famílias</option>
+        <option value="CUIDADOR">Cuidadores</option>
+      </select>
+      @if(sucesso()){
+      <p class="notice notice-success" role="status">{{sucesso()}}</p>
+      }@if(erro()){
+      <p class="notice notice-error" role="alert">{{erro()}}</p>
+      <ion-button fill="outline" (click)="carregar()">Tentar novamente</ion-button>} @if(carregando()){
+      <p role="status">Carregando contas…</p>
+      }@else{
+      <p class="result-count">{{resultados().length}} conta(s) encontrada(s)</p>
+      <div class="carer-list">
+        @for(conta of resultados();track conta.id){
+        <article class="content-card admin-card">
+          <span class="profile-label">{{conta.role==='CLIENTE'?'Família':'Cuidador'}}</span>
+          <h2>{{conta.nome}}</h2>
+          <p class="account-email">{{conta.email}}</p>
+          <details>
+            <summary>Ver dados do perfil</summary>
+            <dl>
+              <dt>CPF</dt>
+              <dd>{{conta.cpf || 'Não informado'}}</dd>
+              @if(conta.familia;as f){
+              <dt>Paciente</dt>
+              <dd>{{f.nomePaciente}}</dd>
+              <dt>Nascimento</dt>
+              <dd>{{f.dataNascimento}}</dd>
+              <dt>Motivo do cuidado</dt>
+              <dd>{{f.finalidade==='pos_operatorio'?'Recuperação após cirurgia':'Apoio nas atividades diárias'}}</dd>
+              <dt>Alergias</dt>
+              <dd>{{f.alergias || 'Não informadas'}}</dd>
+              <dt>Orientações para o cuidado</dt>
+              <dd>{{f.recomendacoes || 'Não informadas'}}</dd>
+              } @if(conta.cuidador;as c){
+              <dt>Nome profissional</dt>
+              <dd>{{c.nomeCuidador}}</dd>
+              <dt>Nome social</dt>
+              <dd>{{c.nomeSocial || 'Não informado'}}</dd>
+              <dt>Gênero</dt>
+              <dd>{{c.genero}}</dd>
+              <dt>Nascimento</dt>
+              <dd>{{c.dataNascimento}}</dd>
+              <dt>Experiência profissional</dt>
+              <dd class="preserve-lines">{{c.descricao || 'Não informada'}}</dd>
+              <dt>Currículo</dt>
+              <dd>{{c.curriculoUrl || 'Não informado'}}</dd>
+              }
+            </dl>
+            @if(!conta.familia && !conta.cuidador){
+            <p class="field-note">O perfil ainda não foi preenchido.</p>
+            }
+          </details>
+          <button
+            class="delete-button"
+            type="button"
+            (click)="pendente.set(conta)"
+            [attr.aria-label]="'Excluir conta de '+conta.nome"
+          >
+            Excluir conta
+          </button>
+        </article>
+        }@empty{
+        <p class="state-message">Nenhuma conta encontrada.</p>
+        }
+      </div>
+      }
+      <a class="curriculum-link" routerLink="/busca">Ver busca de cuidadores →</a>
+    </div>
+  </main>
+  <dialog
+    #deleteDialog
+    class="confirm-dialog"
+    aria-labelledby="delete-title"
+    aria-describedby="delete-description"
+    (cancel)="cancelar($event)"
+  >
+    @if(pendente();as conta){
+    <h2 id="delete-title">Excluir esta conta?</h2>
+    <p id="delete-description">
+      A conta de {{conta.nome}} ({{conta.email}}) e os dados do perfil serão excluídos. Esta ação não pode ser desfeita.
+    </p>
+    <button autofocus type="button" class="cancel-button" (click)="pendente.set(null)" [disabled]="excluindo()">
+      Cancelar
+    </button>
+    <button type="button" class="delete-button" (click)="excluir()" [disabled]="excluindo()">
+      {{excluindo()?'Excluindo…':'Confirmar exclusão'}}
+    </button>
+    }
+  </dialog>
+</ion-content>

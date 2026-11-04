@@ -48,8 +48,8 @@ O script cria as contas abaixo e verifica o login. Se uma delas já existir, ele
 
 | Perfil | E-mail | Senha |
 | --- | --- | --- |
-| Família | testefamilia@exemplo.com | 123456 |
-| Cuidador | testecuidador@exemplo.com | 123456 |
+| Família | familia@mail.com | 123456 |
+| Cuidador | cuidador@mail.com | 123456 |
 
 Os perfis podem ser preenchidos pela própria interface. Use nomes e informações fictícios.
 
@@ -82,3 +82,23 @@ As credenciais do banco e a chave de sessão ficam em .local e não são version
 
 A busca de cuidadores, as solicitações, a agenda, os contratos, os pagamentos e as avaliações ainda estão em desenvolvimento. Existe um perfil de paciente por conta de família. O currículo é informado por endereço, sem envio de arquivos.
 
+
+
+## Busca e administração
+
+Famílias e cuidadores podem abrir a busca e consultar os perfis profissionais. Todos os cuidadores cadastrados aparecem, inclusive os que ainda não preencheram a apresentação. O cuidador atualiza os próprios dados em Meu perfil.
+
+Para administrar as contas, entre com `admin@admin.com` e senha `admin123`. O painel permite consultar os dados das famílias e cuidadores e excluir suas contas após confirmação. Para bancos existentes, aplique `database/migracao-cpf.sql` e `database/migracao-admin.sql` uma única vez, caso essas atualizações ainda não tenham sido aplicadas.
+
+
+
+## Navegação de famílias e cuidadores
+
+A barra inferior mostra Histórico, Buscar (família) ou Contatos (cuidador), e Opções. O histórico permanece vazio enquanto pagamentos não estiverem disponíveis. Em Opções, a família edita nome, e-mail, CPF e senha; o cuidador também pode acessar seu perfil profissional. Para salvar ou excluir a própria conta, informe a senha atual.
+
+A família pode solicitar contato no perfil do cuidador, após ler o aviso de compartilhamento de nome e e-mail. O cuidador vê essas solicitações na aba Contatos. O aplicativo não envia mensagens automaticamente.
+
+Se o banco já existia antes dessa função, execute `database/migracao-contatos.sql` uma única vez antes de iniciar a versão atualizada.
+
+
+O cuidador agora encontra um único botão Editar perfil em Opções. A tela reúne os dados sensíveis na parte superior e os dados públicos na parte inferior. O botão Salvar alterações grava as duas partes juntas e exige a senha atual. A família continua editando apenas nome, e-mail, CPF e senha.

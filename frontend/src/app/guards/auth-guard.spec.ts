@@ -8,7 +8,7 @@ import { Auth } from '../services/auth';
 import { authGuard, guestGuard } from './auth-guard';
 
 describe('guards de autenticação', () => {
-  const auth = { restaurar: vi.fn().mockResolvedValue(undefined), usuario: vi.fn(), home: '/home-cliente' };
+  const auth = { restaurar: vi.fn().mockResolvedValue(undefined), usuario: vi.fn(), home: '/busca' };
   beforeEach(() => {
     auth.usuario.mockReturnValue(null);
     TestBed.configureTestingModule({ providers: [provideRouter([]), { provide: Auth, useValue: auth }] });
@@ -27,13 +27,13 @@ describe('guards de autenticação', () => {
   });
   it('redireciona quando tenta acessar a home do outro tipo', async () => {
     auth.usuario.mockReturnValue({ role: 'CLIENTE' });
-    expect(TestBed.inject(Router).serializeUrl((await check('CUIDADOR')) as never)).toBe('/home-cliente');
+    expect(TestBed.inject(Router).serializeUrl((await check('CUIDADOR')) as never)).toBe('/busca');
   });
   it('abre a home ao restaurar usuário em rota pública', async () => {
     auth.usuario.mockReturnValue({ role: 'CLIENTE' });
     const result = await TestBed.runInInjectionContext(() =>
       guestGuard(new ActivatedRouteSnapshot(), {} as RouterStateSnapshot),
     );
-    expect(TestBed.inject(Router).serializeUrl(result as never)).toBe('/home-cliente');
+    expect(TestBed.inject(Router).serializeUrl(result as never)).toBe('/busca');
   });
 });

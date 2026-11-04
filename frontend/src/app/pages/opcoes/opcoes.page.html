@@ -1,0 +1,65 @@
+<ion-content
+  ><main class="app-shell directory-screen">
+    <header class="directory-header">
+      <h1>Opções da conta</h1>
+      <p>{{auth.usuario()?.nome}}</p>
+    </header>
+    <div class="page-body">
+      <section class="content-card">
+        <h2>Meu perfil</h2>
+        <p>
+          {{auth.usuario()?.role==='CUIDADOR'?'Atualize seus dados de acesso e sua apresentação profissional.':'Altere
+          seu nome, e-mail, CPF e senha de acesso.'}}
+        </p>
+        <ion-button expand="block" routerLink="/opcoes/conta">Editar perfil</ion-button>
+      </section>
+
+      <section class="content-card profile-section">
+        <h2>Acesso e privacidade</h2>
+        <ion-button expand="block" fill="outline" (click)="sair()">Sair da conta</ion-button
+        ><button
+          class="delete-button"
+          style="width: 100%; margin-top: 16px"
+          type="button"
+          (click)="confirmando.set(true)"
+        >
+          Excluir minha conta
+        </button>
+      </section>
+    </div>
+  </main>
+  <dialog
+    #deleteDialog
+    class="confirm-dialog"
+    aria-labelledby="own-delete-title"
+    aria-describedby="own-delete-text"
+    (cancel)="cancelar($event)"
+  >
+    @if(confirmando()){
+    <h2 id="own-delete-title">Excluir sua conta?</h2>
+    <p id="own-delete-text">Seus dados, perfil e contatos serão excluídos. Esta ação não pode ser desfeita.</p>
+    <form #form="ngForm" (ngSubmit)="excluir(form)" novalidate>
+      <div class="field">
+        <span class="input-label" id="delete-password">Senha atual para excluir a conta</span
+        ><ion-input
+          aria-labelledby="delete-password"
+          type="password"
+          fill="outline"
+          name="senhaAtual"
+          [(ngModel)]="senhaAtual"
+          required
+          autocomplete="current-password"
+          [disabled]="excluindo()"
+        />
+      </div>
+      @if(erro()){
+      <p class="notice notice-error" role="alert">{{erro()}}</p>
+      }<button autofocus class="cancel-button" type="button" (click)="cancelar()" [disabled]="excluindo()">
+        Cancelar</button
+      ><button class="delete-button" type="submit" [disabled]="excluindo()">
+        {{excluindo()?'Excluindo…':'Confirmar exclusão'}}
+      </button>
+    </form>
+    }
+  </dialog></ion-content
+>

@@ -29,11 +29,17 @@ public class AuthService {
     public void register(RegisterRequest request) {
         String email = request.email().trim().toLowerCase();
 
+        if ("admin@admin.com".equals(email)) throw new ResponseStatusException(HttpStatus.CONFLICT, "Este e-mail é reservado à administração.");
         if (userRepository.existsByEmail(email)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado");
         }
 
+        String cpf = request.cpf().replaceAll("[^0-9]", "");
+        if (userRepository.existsByCpf(cpf)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este CPF já está cadastrado.");
+        }
         User user = new User();
+        user.setCpf(cpf);
         user.setNome(request.nome().trim());
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(request.password()));

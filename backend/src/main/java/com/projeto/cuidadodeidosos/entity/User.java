@@ -22,6 +22,17 @@ public class User {
     @Column(nullable = false)
     private String role = "USER";
 
+    @Column(unique = true, length = 11)
+    private String cpf;
+
+    @Column(name = "auth_version", nullable = false)
+    private int authVersion;
+    public int getAuthVersion() { return authVersion; }
+    public void renewSessions() { authVersion++; }
+
+    public String getCpf() { return cpf; }
+    public void setCpf(String cpf) { this.cpf = cpf; }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getNome() { return nome; }

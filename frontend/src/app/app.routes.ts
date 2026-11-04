@@ -19,22 +19,45 @@ export const routes: Routes = [
     canActivate: [guestGuard],
     loadComponent: () => import('./pages/cadastro/cadastro.page').then((m) => m.CadastroPage),
   },
-  {
-    path: 'home-cliente',
-    canActivate: [authGuard],
-    data: { tipo: 'CLIENTE' },
-    loadComponent: () => import('./pages/home-cliente/home-cliente.page').then((m) => m.HomeClientePage),
-  },
+  { path: 'home-cliente', redirectTo: 'busca', pathMatch: 'full' },
   {
     path: 'home-cuidador',
     canActivate: [authGuard],
     data: { tipo: 'CUIDADOR' },
     loadComponent: () => import('./pages/home-cuidador/home-cuidador.page').then((m) => m.HomeCuidadorPage),
   },
+  { path: 'perfil', redirectTo: 'opcoes/conta', pathMatch: 'full' },
   {
-    path: 'perfil',
+    path: 'busca',
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/perfil/perfil.page').then((m) => m.PerfilPage),
+    loadComponent: () => import('./pages/busca/busca.page').then((m) => m.BuscaPage),
+  },
+  {
+    path: 'cuidadores/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/cuidador-publico/cuidador-publico.page').then((m) => m.CuidadorPublicoPage),
+  },
+  {
+    path: 'admin',
+    canActivate: [authGuard],
+    data: { tipo: 'ADMIN' },
+    loadComponent: () => import('./pages/admin/admin.page').then((m) => m.AdminPage),
+  },
+  {
+    path: 'historico',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/historico/historico.page').then((m) => m.HistoricoPage),
+  },
+  { path: 'contatos', redirectTo: 'home-cuidador', pathMatch: 'full' },
+  {
+    path: 'opcoes',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/opcoes/opcoes.page').then((m) => m.OpcoesPage),
+  },
+  {
+    path: 'opcoes/conta',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/conta/conta.page').then((m) => m.ContaPage),
   },
   { path: '**', redirectTo: 'inicio' },
 ];

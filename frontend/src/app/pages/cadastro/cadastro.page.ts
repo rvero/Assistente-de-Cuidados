@@ -9,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 import type { TipoConta } from '../../services/api';
 import { Api } from '../../services/api';
 import { authError } from '../../services/auth-error';
+import { cpfValido } from '../../services/cpf';
 
 @Component({
   selector: 'app-cadastro',
@@ -22,6 +23,7 @@ export class CadastroPage {
   email = '';
   senha = '';
   nome = '';
+  cpf = '';
   tipo: TipoConta = 'CLIENTE';
   readonly ocupado = signal(false);
   readonly erro = signal('');
@@ -43,7 +45,11 @@ export class CadastroPage {
     this.erro.set('');
     if (form.invalid || !this.email.trim() || !this.nome.trim()) {
       form.control.markAllAsTouched();
-      this.erro.set('Informe seu nome, um e-mail válido e uma senha de 6 a 72 caracteres.');
+      this.erro.set('Informe seu nome, CPF, um e-mail válido e uma senha de 6 a 72 caracteres.');
+      return;
+    }
+    if (!cpfValido(this.cpf)) {
+      this.erro.set('Informe um CPF válido.');
       return;
     }
     this.ocupado.set(true);
@@ -51,6 +57,7 @@ export class CadastroPage {
       await firstValueFrom(
         this.api.cadastrar({
           nome: this.nome.trim(),
+          cpf: this.cpf.replace(/\D/g, ''),
           email: this.email.trim().toLowerCase(),
           password: this.senha,
           tipo: this.tipo,

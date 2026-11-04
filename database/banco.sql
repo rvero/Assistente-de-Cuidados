@@ -11,10 +11,12 @@ USE banco;
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
+    cpf VARCHAR(11) UNIQUE, -- Obrigatório nos novos cadastros; NULL preserva contas anteriores.
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(255) NOT NULL,
-    CONSTRAINT chk_users_role CHECK (role IN ('CLIENTE', 'CUIDADOR'))
+    auth_version INT NOT NULL DEFAULT 0,
+    CONSTRAINT chk_users_role CHECK (role IN ('CLIENTE', 'CUIDADOR', 'ADMIN'))
 ) ENGINE=InnoDB;
 
 -- Perfil do cliente/família; criado quando os dados do paciente forem preenchidos.
@@ -42,4 +44,14 @@ CREATE TABLE logincuidadores (
     curriculo_url VARCHAR(500),
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_cuidador_user FOREIGN KEY (user_id) REFERENCES users(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS contatos (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    familia_id BIGINT NOT NULL,
+    cuidador_id BIGINT NOT NULL,
+    criado_em TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    CONSTRAINT uk_contato_par UNIQUE (familia_id, cuidador_id),
+    CONSTRAINT fk_contato_familia FOREIGN KEY (familia_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_contato_cuidador FOREIGN KEY (cuidador_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
