@@ -21,6 +21,10 @@ public class CuidadorProfile {
     private String descricao;
     @Column(name = "curriculo_url", length = 500)
     private String curriculoUrl;
+    @Column(length = 100)
+    private String cidade;
+    @Column(name = "valor_hora", precision = 10, scale = 2)
+    private java.math.BigDecimal valorHora;
     public Long getId() { return id; }
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
@@ -36,5 +40,8 @@ public class CuidadorProfile {
     public void setDescricao(String value) { this.descricao = value; }
     public String getCurriculoUrl() { return curriculoUrl; }
     public void setCurriculoUrl(String value) { this.curriculoUrl = value; }
+    public String getCidade() { return cidade; }
+    public void setCidade(String value) { this.cidade = value; }
+    public java.math.BigDecimal getValorHora() { return valorHora; }
+    public void setValorHora(java.math.BigDecimal value) { this.valorHora = value; }
 }
-
