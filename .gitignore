@@ -35,3 +35,7 @@ build/
 # Ferramentas e dados locais
 .local/
 backend/data/
+
+# Arquivos gerados e planos internos
+/output/pdf/
+/docs/superpowers/plans/
