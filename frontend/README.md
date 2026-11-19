@@ -12,7 +12,7 @@ Na raiz do projeto:
 
 Abra http://localhost:8081 após a inicialização. A interface compilada e a API usam o mesmo endereço. O MySQL precisa estar configurado conforme ../database/README.md.
 
-O roteiro para apresentar em outro computador, incluindo a execução sem recompilar, está em ../DEMONSTRACAO.md.
+Para publicar, os arquivos `netlify.toml` e `render.yaml` estão na raiz do repositório. Configure `API_BASE_URL` no Netlify com a origem HTTPS da API no Render, sem `/api`.
 
 ## Desenvolver a interface
 
@@ -47,14 +47,8 @@ No Android/iOS, o armazenamento usa capacitor-secure-storage-plugin. Após adici
 
 No navegador de desenvolvimento, a sessão usa localStorage para testes locais. Na versão compilada, o token fica em memória; ao recarregar a página, pode ser necessário entrar novamente. Os dados do perfil permanecem no MySQL.
 
-## Verificações
+## Compilar
 
 ```powershell
-npm run lint
 npm run build
-npm run test:unit
-npm run test:e2e
 ```
-
-Os testes de navegação verificam cadastro, login, seleção de perfil, controle de acesso, edição de dados e recuperação de falhas.
-

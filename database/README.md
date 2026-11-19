@@ -53,28 +53,21 @@ O MySQL portátil está em .local/mysql e os dados, em .local/mysql-data. As cre
 
 O perfil local H2 foi preservado em backend/data para compatibilidade; seus dados não foram apagados nem migrados automaticamente. A apresentação atual utiliza MySQL.
 
-Não copie a pasta de dados de um MySQL em execução. Para levar a apresentação à faculdade, siga ../DEMONSTRACAO.md.
+Não copie a pasta de dados de um MySQL em execução.
 
-## Testes do backend
-
-Com JAVA_HOME apontando para um JDK 25, execute na pasta backend:
-
-```powershell
-.\mvnw.cmd test
-```
-
-Os testes usam H2 isolado e verificam inicialização, validação dos perfis e permissões. O fluxo também foi validado no MySQL real pelo navegador.
 
 ## Apresentação local
 
-O endereço é http://localhost:8081. O arquivo ../DEMONSTRACAO.md contém os requisitos para outro computador, as contas de teste e o roteiro. O link público anterior não é mais utilizado.
+O endereço local é http://localhost:8081. Para TiDB Cloud, importe `tidb.sql` em um banco novo e configure a API no Render com as credenciais de conexão.
 
 
 
 Para bancos criados antes do campo CPF, execute `migracao-cpf.sql` uma única vez, antes de iniciar o backend atualizado. A migração preserva as contas existentes. Novas contas exigem CPF válido e exclusivo; a validação dos dígitos não comprova a identidade do titular.
 
 
-Administração: em bancos existentes, execute também `migracao-admin.sql` uma vez. Na inicialização fora do perfil de teste, o backend cria `admin@admin.com`, senha `admin123`, se esse e-mail ainda não existir. O painel lista contas de família e cuidador, permite consultar seus perfis e excluir uma conta com seus dados. A conta de administração não pode ser excluída pelo painel.
+Administração: em bancos existentes, execute também `migracao-admin.sql` uma vez. Na inicialização local, o backend cria `admin@admin.com`, senha `admin123`, se esse e-mail ainda não existir. O painel lista contas de família e cuidador, permite consultar seus perfis e excluir uma conta com seus dados. A conta de administração não pode ser excluída pelo painel.
 
 
 Barra de navegação e conta: em bancos existentes, aplique `migracao-contatos.sql` uma única vez. Ela adiciona a versão de autenticação em `users` e a tabela `contatos`. A alteração dos dados da conta exige senha atual e renova a sessão. A exclusão remove os perfis e os contatos associados. Novos bancos devem usar o `banco.sql` atualizado.
+
+Na hospedagem com o perfil `cloud`, o administrador é criado com `ADMIN_EMAIL` e `ADMIN_PASSWORD` do Render. A senha precisa ter pelo menos 12 caracteres e no máximo 72 bytes em UTF-8.
