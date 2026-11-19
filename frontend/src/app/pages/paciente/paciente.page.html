@@ -1,0 +1,100 @@
+<ion-content
+  ><main class="app-shell directory-screen">
+    <header class="directory-header">
+      <div class="header-title-row">
+        <a class="back-arrow" [routerLink]="editando()?'/opcoes':'/home-cuidador'" aria-label="Voltar"
+          ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M19 12H5m7-7-7 7 7 7" /></svg
+        ></a>
+        <h1>{{editando()?'Editar dados do paciente':'Dados do paciente'}}</h1>
+      </div>
+    </header>
+    <div class="page-body">
+      @if(carregando()){
+      <p role="status">Carregando dados do paciente…</p>
+      }@else{ @if(erro()){
+      <p class="notice notice-error" role="alert">{{erro()}}</p>
+      }@if(sucesso()){
+      <p class="notice notice-success" role="status">{{sucesso()}}</p>
+      } @if(falha()){<ion-button (click)="carregar()">Tentar novamente</ion-button>}@else if(editando()){
+      <form #form="ngForm" (ngSubmit)="salvar(form)" novalidate>
+        <div class="field">
+          <span class="input-label" id="paciente-nome">Nome do paciente</span
+          ><ion-input
+            aria-labelledby="paciente-nome"
+            fill="outline"
+            name="nomePaciente"
+            [(ngModel)]="paciente.nomePaciente"
+            required
+            maxlength="150"
+            [disabled]="salvando()"
+          />
+        </div>
+        <div class="field">
+          <span class="input-label" id="paciente-motivo">Motivo do cuidado</span
+          ><ion-select
+            aria-labelledby="paciente-motivo"
+            fill="outline"
+            name="finalidade"
+            [(ngModel)]="paciente.finalidade"
+            required
+            cancelText="Cancelar"
+            okText="Confirmar"
+            [disabled]="salvando()"
+            ><ion-select-option value="assistencia_incapaz">Apoio nas atividades diárias</ion-select-option
+            ><ion-select-option value="pos_operatorio">Recuperação após cirurgia</ion-select-option></ion-select
+          >
+        </div>
+        <div class="field">
+          <span class="input-label" id="paciente-alergias">Alergias</span
+          ><ion-textarea
+            aria-labelledby="paciente-alergias"
+            fill="outline"
+            name="alergias"
+            [(ngModel)]="paciente.alergias"
+            rows="3"
+            maxlength="5000"
+            [disabled]="salvando()"
+          />
+        </div>
+        <div class="field">
+          <span class="input-label" id="paciente-orientacoes">Orientações para o cuidado</span
+          ><ion-textarea
+            aria-labelledby="paciente-orientacoes"
+            fill="outline"
+            name="recomendacoes"
+            [(ngModel)]="paciente.recomendacoes"
+            rows="4"
+            maxlength="5000"
+            [disabled]="salvando()"
+          />
+        </div>
+        <ion-button expand="block" type="submit" [disabled]="salvando()"
+          >{{salvando()?'Salvando…':'Salvar dados do paciente'}}</ion-button
+        >
+      </form>
+      }@else if(contato();as c){
+      <section class="content-card">
+        <h2>{{c.nome}}</h2>
+        <p class="account-email">{{c.email}}</p>
+        <a class="curriculum-link" [href]="'mailto:' + c.email">Escrever e-mail ↗</a>
+      </section>
+      @if(c.paciente;as p){
+      <section class="content-card profile-section">
+        <dl>
+          <dt>Nome do paciente</dt>
+          <dd>{{p.nomePaciente}}</dd>
+          <dt>Motivo do cuidado</dt>
+          <dd>{{p.finalidade==='pos_operatorio'?'Recuperação após cirurgia':'Apoio nas atividades diárias'}}</dd>
+          <dt>Alergias</dt>
+          <dd class="preserve-lines">{{p.alergias||'Não informadas'}}</dd>
+          <dt>Orientações para o cuidado</dt>
+          <dd class="preserve-lines">{{p.recomendacoes||'Não informadas'}}</dd>
+        </dl>
+      </section>
+      }@else{
+      <p class="state-message">A família ainda não preencheu os dados do paciente.</p>
+      }} }
+    </div>
+  </main></ion-content
+>

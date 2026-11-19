@@ -19,7 +19,8 @@ test('busca inclui perfis incompletos, filtra por experiência e abre o perfil i
   await page.goto('/busca');
   await expect(page.getByRole('heading', { name: 'Carlos Silva' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Ana Santos' })).toBeVisible();
-  await page.getByLabel('Nome ou experiência').fill('idosos');
+  await page.getByText('Filtrar cuidadores', { exact: true }).click();
+  await page.getByLabel('Nome', { exact: true }).fill('idosos');
   await expect(page.getByRole('heading', { name: 'Ana Santos' })).toHaveCount(0);
   await page.getByRole('link', { name: /Carlos Silva/ }).click();
   await expect(page).toHaveURL(/\/cuidadores\/10$/);
@@ -81,4 +82,73 @@ test('administrador consulta dados e confirma exclusão de conta', async ({ page
   await expect(page.getByRole('status')).toContainText('foi excluída');
   await expect(page.getByRole('heading', { name: 'Carlos Silva', exact: true })).toHaveCount(0);
   expect(deleted).toBe(1);
+});
+
+test('busca filtra cidade e preço sem ocultar cadastro incompleto inicialmente', async ({ page }) => {
+  await session(page);
+  await page.route('**/api/cuidadores', (route) =>
+    route.fulfill({
+      json: [
+        { ...carers[0], cidade: 'Recife', valorHora: 30 },
+        { ...carers[1], cidade: null, valorHora: null },
+      ],
+    }),
+  );
+  await page.goto('/busca');
+  await expect(page.getByRole('heading', { name: 'Ana Santos', exact: true })).toBeVisible();
+  await expect(page.getByLabel('Cidade', { exact: true })).toBeHidden();
+  await expect(page.getByText('ENCONTRE APOIO', { exact: true })).toHaveCount(0);
+  await page.getByText('Filtrar cuidadores', { exact: true }).click();
+  await page.getByLabel('Cidade', { exact: true }).fill('recife');
+  await expect(page.getByRole('heading', { name: 'Carlos Silva', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Ana Santos', exact: true })).toHaveCount(0);
+  await page.getByLabel('Valor máximo por hora (R$)', { exact: true }).fill('20');
+  await expect(page.getByRole('heading', { name: 'Carlos Silva', exact: true })).toHaveCount(0);
+  await page.getByLabel('Valor máximo por hora (R$)', { exact: true }).fill('40');
+  await expect(page.getByRole('heading', { name: 'Carlos Silva', exact: true })).toBeVisible();
+});
+
+test('admin separa cadastros e abre o perfil público do cuidador', async ({ page }) => {
+  await session(page, 'ADMIN');
+  await page.route('**/api/admin/contas', (route) =>
+    route.fulfill({
+      json: [
+        {
+          id: 10,
+          nome: 'Carlos Silva',
+          email: 'carlos@example.test',
+          cpf: null,
+          role: 'CUIDADOR',
+          cuidador: null,
+          familia: null,
+        },
+        {
+          id: 11,
+          nome: 'Maria Santos',
+          email: 'maria@example.test',
+          cpf: null,
+          role: 'CLIENTE',
+          cuidador: null,
+          familia: null,
+        },
+      ],
+    }),
+  );
+  await page.route('**/api/cuidadores/10', (route) => route.fulfill({ json: carers[0] }));
+  await page.goto('/admin');
+  await expect(
+    page
+      .getByRole('region', { name: 'Famílias', exact: true })
+      .getByRole('heading', { name: 'Maria Santos', exact: true }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole('region', { name: 'Cuidadores', exact: true })
+      .getByRole('heading', { name: 'Carlos Silva', exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole('link', { name: /Ver busca de cuidadores/ })).toHaveCount(0);
+  await page.getByRole('link', { name: 'Ver perfil público', exact: true }).click();
+  await expect(page).toHaveURL(/\/cuidadores\/10$/);
+  await page.getByRole('link', { name: 'Voltar', exact: true }).click();
+  await expect(page).toHaveURL(/\/admin$/);
 });

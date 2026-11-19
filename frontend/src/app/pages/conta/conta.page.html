@@ -1,12 +1,13 @@
 <ion-content
   ><main class="app-shell directory-screen">
     <header class="directory-header">
-      <a class="back-link" routerLink="/opcoes">← Opções</a>
-      <h1>{{profissional()?'Editar perfil':'Editar dados da conta'}}</h1>
-      <p>
-        {{profissional()?'Organize seus dados pessoais e sua apresentação profissional.':'Atualize seu nome, e-mail, CPF
-        ou senha.'}}
-      </p>
+      <div class="header-title-row">
+        <a routerLink="/opcoes" class="back-arrow" aria-label="Voltar às opções"
+          ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M19 12H5m7-7-7 7 7 7" /></svg
+        ></a>
+        <h1>{{profissional()?'Editar perfil':'Editar dados da conta'}}</h1>
+      </div>
     </header>
     <div class="page-body">
       @if(carregando()){
@@ -19,10 +20,9 @@
       <form #form="ngForm" (ngSubmit)="salvar(form)" novalidate>
         <section class="profile-fields" aria-labelledby="dados-sensiveis">
           <h2 id="dados-sensiveis">{{profissional()?'Dados sensíveis':'Dados da conta'}}</h2>
-          <p class="section-description">
-            {{profissional()?'Estas informações não aparecem no seu perfil público.':'Seus dados de acesso e
-            identificação.'}}
-          </p>
+          @if(profissional()){
+          <p class="section-description">Estas informações não aparecem no seu perfil público.</p>
+          }
           <div class="field">
             <span class="input-label" id="conta-nome">Nome completo</span
             ><ion-input
@@ -78,9 +78,6 @@
               autocomplete="new-password"
               [disabled]="salvando()"
             />
-            <p class="field-note">
-              Deixe em branco para manter sua senha. Uma nova senha deve ter de 6 a 72 caracteres.
-            </p>
           </div>
           <div class="field">
             <span class="input-label" id="conta-senha-atual">Senha atual</span
@@ -135,6 +132,34 @@
             Estas informações poderão ser consultadas pelas famílias na busca de cuidadores.
           </p>
           <div class="field">
+            <span class="input-label" id="perfil-cidade">Cidade de atendimento</span
+            ><ion-input
+              fill="outline"
+              aria-labelledby="perfil-cidade"
+              name="cidade"
+              [(ngModel)]="cuidador.cidade"
+              maxlength="100"
+              placeholder="Ex.: Recife"
+              [disabled]="salvando()"
+            />
+          </div>
+          <div class="field">
+            <span class="input-label" id="perfil-valor">Valor por hora (R$)</span
+            ><ion-input
+              fill="outline"
+              aria-labelledby="perfil-valor"
+              name="valorHora"
+              type="number"
+              inputmode="decimal"
+              [(ngModel)]="cuidador.valorHora"
+              min="0.01"
+              max="99999999.99"
+              step="0.01"
+              placeholder="Ex.: 25,00"
+              [disabled]="salvando()"
+            />
+          </div>
+          <div class="field">
             <span class="input-label" id="perfil-nomeCuidador">Nome de apresentação</span
             ><ion-input
               fill="outline"
@@ -144,17 +169,6 @@
               required
               maxlength="150"
               autocomplete="name"
-              [disabled]="salvando()"
-            ></ion-input>
-          </div>
-          <div class="field">
-            <span class="input-label" id="perfil-nomeSocial">Nome social (opcional)</span
-            ><ion-input
-              fill="outline"
-              aria-labelledby="perfil-nomeSocial"
-              name="nomeSocial"
-              [(ngModel)]="cuidador.nomeSocial"
-              maxlength="150"
               [disabled]="salvando()"
             ></ion-input>
           </div>

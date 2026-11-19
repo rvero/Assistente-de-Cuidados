@@ -8,6 +8,8 @@ public record CuidadorProfileData(
     @NotNull(message = "Selecione o gênero.") Genero genero,
     @NotNull(message = "Informe a data de nascimento.") @Past(message = "A data de nascimento deve ser anterior à data de hoje.") LocalDate dataNascimento,
     @Size(max = 5000, message = "A experiência profissional deve ter no máximo 5.000 caracteres.") String descricao,
-    @Size(max = 500, message = "O endereço do currículo deve ter no máximo 500 caracteres.") @Pattern(regexp = "^(https?://[^\\s]+)?$", message = "Informe um endereço válido para o currículo, começando com http:// ou https://.") String curriculoUrl
+    @Size(max = 500, message = "O endereço do currículo deve ter no máximo 500 caracteres.") @Pattern(regexp = "^(https?://[^\\s]+)?$", message = "Informe um endereço válido para o currículo, começando com http:// ou https://.") String curriculoUrl,
+    @Size(max=100, message="A cidade deve ter até 100 caracteres.") String cidade,
+    @DecimalMin(value="0.0", inclusive=false, message="Informe um valor por hora maior que zero.") @Digits(integer=8,fraction=2,message="Informe um valor com até duas casas decimais.") java.math.BigDecimal valorHora
 ) {}
 

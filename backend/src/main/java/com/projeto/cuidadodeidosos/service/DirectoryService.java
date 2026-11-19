@@ -17,11 +17,11 @@ public class DirectoryService {
     public DirectoryService(UserRepository users, CuidadorProfileRepository carers, FamiliaProfileRepository families, ContatoRepository contacts) {
         this.users = users; this.carers = carers; this.families = families; this.contacts = contacts;
     }
-    public record PublicCarer(Long id, String nome, String descricao, String curriculoUrl, boolean perfilCompleto) {}
+    public record PublicCarer(Long id, String nome, String descricao, String curriculoUrl, boolean perfilCompleto, String cidade, java.math.BigDecimal valorHora) {}
     public record Account(Long id, String nome, String email, String cpf, String role, FamiliaProfileData familia, CuidadorProfileData cuidador) {}
     private PublicCarer publicData(User user, CuidadorProfile p) {
         String nome = p == null ? user.getNome() : (p.getNomeSocial() != null && !p.getNomeSocial().isBlank() ? p.getNomeSocial() : p.getNomeCuidador());
-        return new PublicCarer(user.getId(), nome, p == null ? null : p.getDescricao(), p == null ? null : p.getCurriculoUrl(), p != null);
+        return new PublicCarer(user.getId(), nome, p == null ? null : p.getDescricao(), p == null ? null : p.getCurriculoUrl(), p != null, p == null ? null : p.getCidade(), p == null ? null : p.getValorHora());
     }
     public List<PublicCarer> listCarers() {
         Map<Long, CuidadorProfile> profiles = new HashMap<>();
@@ -35,7 +35,7 @@ public class DirectoryService {
     public List<Account> accounts() {
         return users.findAll().stream().filter(u -> !"ADMIN".equals(u.getRole())).map(u -> {
             var f = families.findByUserId(u.getId()).map(p -> new FamiliaProfileData(p.getNomePaciente(), p.getDataNascimento(), p.getFinalidade(), p.getAlergias(), p.getRecomendacoes())).orElse(null);
-            var c = carers.findByUserId(u.getId()).map(p -> new CuidadorProfileData(p.getNomeCuidador(), p.getNomeSocial(), p.getGenero(), p.getDataNascimento(), p.getDescricao(), p.getCurriculoUrl())).orElse(null);
+            var c = carers.findByUserId(u.getId()).map(p -> new CuidadorProfileData(p.getNomeCuidador(), p.getNomeSocial(), p.getGenero(), p.getDataNascimento(), p.getDescricao(), p.getCurriculoUrl(), p.getCidade(), p.getValorHora())).orElse(null);
             return new Account(u.getId(), u.getNome(), u.getEmail(), u.getCpf(), u.getRole(), f, c);
         }).toList();
     }

@@ -482,3 +482,49 @@ ion-radio:focus-visible {
 .field ion-select {
   min-height: 56px;
 }
+
+.back-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: inherit;
+  text-decoration: none;
+  vertical-align: middle;
+}
+.back-arrow svg {
+  width: 24px;
+  height: 24px;
+}
+.directory-header .back-arrow {
+  color: white;
+  margin-bottom: 8px;
+}
+.back-arrow:hover {
+  background: #6c63a818;
+}
+.directory-header .back-arrow:hover {
+  background: #ffffff20;
+}
+
+.header-title-row {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: center;
+  width: 100%;
+}
+.header-title-row > .back-arrow {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+}
+.header-title-row > h1 {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: center;
+}
+.auth-brand .header-title-row > h1 {
+  margin: 0;
+}

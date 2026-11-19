@@ -8,6 +8,8 @@ import type { Papel } from './api';
 import type { CuidadorPerfil, FamiliaPerfil } from './profile-api';
 
 export interface CuidadorPublico {
+  cidade?: string | null;
+  valorHora?: number | null;
   id: number;
   nome: string;
   descricao: string | null;

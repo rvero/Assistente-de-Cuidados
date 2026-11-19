@@ -270,3 +270,19 @@ dd {
   background: #c24c4c;
   color: white;
 }
+
+.directory-header {
+  text-align: center;
+}
+.directory-header .header-title-row > h1 {
+  margin: 0;
+}
+.directory-header .header-title-row > .back-arrow {
+  margin: 0;
+}
+
+.contact-notification {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}

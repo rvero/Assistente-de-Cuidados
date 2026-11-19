@@ -24,7 +24,7 @@ CREATE TABLE loginfamilia (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL UNIQUE,
     nomepaciente VARCHAR(150) NOT NULL,
-    data_nascimento DATE NOT NULL,
+    data_nascimento DATE NULL,
     finalidade ENUM('assistencia_incapaz', 'pos_operatorio') NOT NULL,
     alergias TEXT,
     recomendacoes TEXT,
@@ -42,6 +42,8 @@ CREATE TABLE logincuidadores (
     data_nascimento DATE NOT NULL,
     descricao TEXT,
     curriculo_url VARCHAR(500),
+    cidade VARCHAR(100),
+    valor_hora DECIMAL(10,2),
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_cuidador_user FOREIGN KEY (user_id) REFERENCES users(id)
 ) ENGINE=InnoDB;

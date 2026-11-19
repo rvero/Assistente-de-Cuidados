@@ -59,5 +59,17 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./pages/conta/conta.page').then((m) => m.ContaPage),
   },
+  {
+    path: 'opcoes/paciente',
+    canActivate: [authGuard],
+    data: { tipo: 'CLIENTE' },
+    loadComponent: () => import('./pages/paciente/paciente.page').then((m) => m.PacientePage),
+  },
+  {
+    path: 'contatos/:id',
+    canActivate: [authGuard],
+    data: { tipo: 'CUIDADOR' },
+    loadComponent: () => import('./pages/paciente/paciente.page').then((m) => m.PacientePage),
+  },
   { path: '**', redirectTo: 'inicio' },
 ];

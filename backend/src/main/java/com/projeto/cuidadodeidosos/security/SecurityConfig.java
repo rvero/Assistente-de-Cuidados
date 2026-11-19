@@ -32,14 +32,14 @@ public class SecurityConfig {
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(auth -> auth
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/", "/index.html", "/inicio", "/login", "/cadastro", "/perfil", "/home-cliente", "/home-cuidador", "/busca", "/cuidadores/*", "/admin", "/historico", "/contatos", "/opcoes", "/opcoes/conta", "/*.js", "/*.css", "/assets/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/", "/index.html", "/inicio", "/login", "/cadastro", "/perfil", "/home-cliente", "/home-cuidador", "/busca", "/cuidadores/*", "/admin", "/historico", "/contatos", "/opcoes", "/opcoes/conta", "/opcoes/paciente", "/contatos/*", "/*.js", "/*.css", "/assets/**", "/favicon.ico").permitAll()
                         .requestMatchers("/auth/**", "/api/auth/**").permitAll()
                         .requestMatchers("/cuidador/**", "/api/cuidador/**").hasRole("CUIDADOR")
                         .requestMatchers("/cliente/**", "/api/cliente/**").hasRole("CLIENTE")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/conta", "/api/conta/**").hasAnyRole("CLIENTE", "CUIDADOR")
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/cuidadores/*/contato").hasRole("CLIENTE")
-                        .requestMatchers("/api/contatos").hasRole("CUIDADOR")
+                        .requestMatchers("/api/contatos", "/api/contatos/**").hasRole("CUIDADOR")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthFilter(jwtService, users), UsernamePasswordAuthenticationFilter.class);
         return http.build();

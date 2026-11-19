@@ -8,5 +8,6 @@ public class ContactController {
     private final ContactService contacts;
     public ContactController(ContactService contacts){this.contacts=contacts;}
     @PostMapping("/api/cuidadores/{id}/contato") public ContactService.ContactResult contact(Authentication auth,@PathVariable Long id){return contacts.contact(auth.getName(),id);}
+    @GetMapping("/api/contatos/{id}") public ContactService.ContactDetails detail(Authentication auth,@PathVariable Long id){return contacts.detail(auth.getName(),id);}
     @GetMapping("/api/contatos") public List<ContactService.FamilyContact> list(Authentication auth){return contacts.list(auth.getName());}
 }

@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
     private final ProfileService profiles;
     public ProfileController(ProfileService profiles) { this.profiles = profiles; }
+    @GetMapping("/api/cliente/paciente")
+    public ResponseEntity<PatientData> paciente(Authentication auth) { var data=profiles.paciente(auth.getName());return data==null?ResponseEntity.noContent().build():ResponseEntity.ok(data); }
+    @PutMapping("/api/cliente/paciente")
+    public PatientData salvarPaciente(Authentication auth,@Valid @RequestBody PatientData data) {return profiles.salvarPaciente(auth.getName(),data);}
     @GetMapping({"/cliente/perfil", "/api/cliente/perfil"})
     public ResponseEntity<FamiliaProfileData> familia(Authentication auth) {
         FamiliaProfileData data = profiles.familia(auth.getName());

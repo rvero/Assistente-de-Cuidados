@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { IonContent, IonButton } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 
@@ -8,13 +9,12 @@ import { accountError } from '../../services/account-error';
 
 @Component({
   selector: 'app-home-cuidador',
-  imports: [DatePipe, IonContent, IonButton],
+  imports: [RouterLink, DatePipe, IonContent, IonButton],
   styleUrls: ['../directory.scss'],
   template: `<ion-content
     ><main class="app-shell directory-screen">
       <header class="directory-header">
         <h1>Contatos recebidos</h1>
-        <p>Famílias que demonstraram interesse no seu trabalho.</p>
       </header>
       <div class="page-body">
         @if (carregando()) {
@@ -26,11 +26,13 @@ import { accountError } from '../../services/account-error';
           <div class="carer-list">
             @for (contato of contatos(); track contato.id) {
               <article class="content-card admin-card">
-                <span class="profile-label">Família</span>
-                <h2>{{ contato.nome }}</h2>
-                <p class="account-email">{{ contato.email }}</p>
-                <p class="field-note">Contato em {{ contato.criadoEm | date: 'dd/MM/yyyy' }}</p>
-                <a class="curriculum-link" [href]="'mailto:' + contato.email">Escrever e-mail ↗</a>
+                <a class="contact-notification" [routerLink]="['/contatos', contato.id]"
+                  ><span class="profile-label">Família</span>
+                  <h2>{{ contato.nome }}</h2>
+                  <p class="account-email">{{ contato.email }}</p>
+                  <p class="field-note">Contato em {{ contato.criadoEm | date: 'dd/MM/yyyy' }}</p>
+                  <span class="view-profile">Ver dados do paciente →</span></a
+                >
               </article>
             } @empty {
               <section class="content-card empty-state">

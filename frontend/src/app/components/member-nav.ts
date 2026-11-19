@@ -63,7 +63,7 @@ import { Auth } from '../services/auth';
         gap: 4px;
         border-radius: 16px;
         text-decoration: none;
-        color: #f2f6f5;
+        color: #ffffff;
         font-size: 12px;
         font-weight: bold;
       }
@@ -72,13 +72,13 @@ import { Auth } from '../services/auth';
         height: 26px;
       }
       .history svg {
-        color: #ffc18a;
+        color: #ffffff;
       }
       .activity svg {
-        color: #f2f6f5;
+        color: #ffffff;
       }
       .options svg {
-        color: #d3c6ff;
+        color: #ffffff;
       }
       a.selected {
         background: #ffffff20;

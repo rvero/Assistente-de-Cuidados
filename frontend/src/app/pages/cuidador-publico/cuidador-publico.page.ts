@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { IonContent, IonButton } from '@ionic/angular';
@@ -9,7 +10,7 @@ import { DirectoryApi, type CuidadorPublico } from '../../services/directory-api
 
 @Component({
   selector: 'app-cuidador-publico',
-  imports: [RouterLink, IonContent, IonButton],
+  imports: [CurrencyPipe, RouterLink, IonContent, IonButton],
   templateUrl: './cuidador-publico.page.html',
   styleUrls: ['../directory.scss'],
 })

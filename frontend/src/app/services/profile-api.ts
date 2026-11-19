@@ -12,6 +12,8 @@ export interface FamiliaPerfil {
   recomendacoes: string;
 }
 export interface CuidadorPerfil {
+  cidade?: string | null;
+  valorHora?: number | null;
   nomeCuidador: string;
   nomeSocial: string;
   genero: '' | 'masculino' | 'feminino' | 'outro';

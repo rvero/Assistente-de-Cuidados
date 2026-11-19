@@ -23,7 +23,16 @@ public class ProfileService {
         return new FamiliaProfileData(p.getNomePaciente(), p.getDataNascimento(), p.getFinalidade(), p.getAlergias(), p.getRecomendacoes());
     }
     private CuidadorProfileData data(CuidadorProfile p) {
-        return new CuidadorProfileData(p.getNomeCuidador(), p.getNomeSocial(), p.getGenero(), p.getDataNascimento(), p.getDescricao(), p.getCurriculoUrl());
+        return new CuidadorProfileData(p.getNomeCuidador(), p.getNomeSocial(), p.getGenero(), p.getDataNascimento(), p.getDescricao(), p.getCurriculoUrl(), p.getCidade(), p.getValorHora());
+    }
+    private PatientData patientData(FamiliaProfile p) { return new PatientData(p.getNomePaciente(),p.getFinalidade(),p.getAlergias(),p.getRecomendacoes()); }
+    @Transactional(readOnly=true)
+    public PatientData paciente(String email) { User user=owner(email,"CLIENTE");return familias.findByUserId(user.getId()).map(this::patientData).orElse(null); }
+    @Transactional
+    public PatientData salvarPaciente(String email,PatientData d) {
+        User user=owner(email,"CLIENTE");FamiliaProfile p=familias.findByUserId(user.getId()).orElseGet(FamiliaProfile::new);
+        p.setUser(user);p.setNomePaciente(d.nomePaciente().trim());p.setFinalidade(d.finalidade());p.setAlergias(d.alergias());p.setRecomendacoes(d.recomendacoes());
+        return patientData(familias.save(p));
     }
     @Transactional(readOnly = true)
     public FamiliaProfileData familia(String email) {
@@ -50,6 +59,7 @@ public class ProfileService {
         p.setUser(user); p.setNomeCuidador(d.nomeCuidador().trim()); p.setNomeSocial(d.nomeSocial());
         p.setGenero(d.genero()); p.setDataNascimento(d.dataNascimento()); p.setDescricao(d.descricao());
         p.setCurriculoUrl(d.curriculoUrl());
+        p.setCidade(d.cidade() == null || d.cidade().isBlank() ? null : d.cidade().trim()); p.setValorHora(d.valorHora());
         return data(cuidadores.save(p));
     }
 }

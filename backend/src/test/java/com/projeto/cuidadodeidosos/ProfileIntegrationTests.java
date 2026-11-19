@@ -130,6 +130,34 @@ class ProfileIntegrationTests {
         assertTrue(publicData.contains("Cuidador ficticio"));assertFalse(publicData.contains("cpf"));assertFalse(publicData.contains("dataNascimento"));assertFalse(publicData.contains(email));
         assertEquals(403,call("PUT","/api/conta/perfil-cuidador",passwordAccount("CLIENTE"),body).statusCode());
     }
+    @Test void cityAndHourlyRatePersistAndArePublicButRejectInvalidValues() throws Exception {
+        String token=account("CUIDADOR");
+        String body=carer.strip().replace("}",",\"cidade\":\"Recife\",\"valorHora\":25.50}");
+        assertEquals(200,call("PUT","/api/cuidador/perfil",token,body).statusCode());
+        Long id=users.findByEmail(jwt.parse(token).getSubject()).orElseThrow().getId();
+        var detail=call("GET","/api/cuidadores/"+id,token,null);
+        assertTrue(detail.body().contains("Recife"));assertTrue(detail.body().contains("25.5"));
+        assertEquals(400,call("PUT","/api/cuidador/perfil",token,body.replace("25.50","-1")).statusCode());
+        assertEquals(400,call("PUT","/api/cuidador/perfil",token,body.replace("25.50","25.555")).statusCode());
+        assertTrue(call("GET","/api/cuidador/perfil",token,null).body().contains("Recife"));
+    }
+    @Test void patientDetailsAreVisibleOnlyToTheContactedCaregiver() throws Exception {
+        String familyToken=account("CLIENTE"),carerToken=account("CUIDADOR"),other=account("CUIDADOR");
+        String patient="{\"nomePaciente\":\"Paciente teste\",\"finalidade\":\"pos_operatorio\",\"alergias\":\"Alergia teste\",\"recomendacoes\":\"Orientações teste\"}";
+        assertEquals(200,call("PUT","/api/cliente/paciente",familyToken,patient).statusCode());
+        assertEquals(403,call("GET","/api/cliente/paciente",carerToken,null).statusCode());
+        Long id=users.findByEmail(jwt.parse(carerToken).getSubject()).orElseThrow().getId();
+        assertEquals(200,call("POST","/api/cuidadores/"+id+"/contato",familyToken,"{}").statusCode());
+        var json=new com.google.gson.JsonParser().parse(call("GET","/api/contatos",carerToken,null).body());
+        long contactId=json.getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
+        String endpoint="/api/contatos/"+contactId;
+        assertEquals(401,call("GET",endpoint,null,null).statusCode());
+        assertEquals(404,call("GET",endpoint,other,null).statusCode());
+        assertEquals(403,call("GET",endpoint,familyToken,null).statusCode());
+        var response=call("GET",endpoint,carerToken,null);assertEquals(200,response.statusCode());
+        assertTrue(response.body().contains("Paciente teste"));assertFalse(response.body().contains("cpf"));assertFalse(response.body().contains("dataNascimento"));
+        assertEquals(400,call("PUT","/api/cliente/paciente",familyToken,patient.replace("Paciente teste", "")).statusCode());
+    }
     @Test void contactsBelongOnlyToTheChosenCarerAndAreRemovedWithAccount() throws Exception {
         String familyToken = passwordAccount("CLIENTE"); String carerToken = passwordAccount("CUIDADOR");
         Long carerId = users.findByEmail(jwt.parse(carerToken).getSubject()).orElseThrow().getId();
@@ -177,4 +205,3 @@ class ProfileIntegrationTests {
         assertEquals(204, call("GET", "/api/cliente/perfil", token, null).statusCode());
     }
 }
-

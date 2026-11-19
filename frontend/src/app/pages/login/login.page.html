@@ -7,7 +7,13 @@
           <path d="M16 11v10m-5-5h10" />
         </svg>
       </div>
-      <h1>Assistente de Cuidados</h1>
+      <div class="header-title-row">
+        <a routerLink="/inicio" class="back-arrow" aria-label="Voltar ao início"
+          ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M19 12H5m7-7-7 7 7 7" /></svg
+        ></a>
+        <h1>Assistente de Cuidados</h1>
+      </div>
       <p>Para famílias e profissionais de cuidados.</p>
     </header>
     <div class="page-body">
@@ -67,7 +73,6 @@
       </form>
       <div class="auth-footer">
         <ion-button fill="clear" routerLink="/cadastro">Criar conta</ion-button>
-        <p><a routerLink="/inicio">Voltar ao início</a></p>
       </div>
     </div>
   </main></ion-content

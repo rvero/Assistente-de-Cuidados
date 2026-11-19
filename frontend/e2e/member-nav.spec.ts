@@ -101,3 +101,35 @@ test('salvar conta atualiza sessão mesmo ao navegar para outra aba', async ({ p
   finishSave?.();
   await expect.poll(() => page.evaluate(() => localStorage.getItem('assistente-token'))).toBe('token-apos-navegar');
 });
+
+for (const scenario of ['sucesso', 'erro']) {
+  test('mensagem de ' + scenario + ' fica visível ao salvar no fim do formulário', async ({ page }) => {
+    await session(page, 'CLIENTE');
+    await page.route('**/api/conta', (route) => {
+      if (route.request().method() === 'GET')
+        return route.fulfill({ json: { nome: 'Conta teste', email: 'conta@example.test', cpf: '52998224725' } });
+      return scenario === 'sucesso'
+        ? route.fulfill({
+            json: { nome: 'Conta teste', email: 'conta@example.test', role: 'CLIENTE', token: 'novo-token' },
+          })
+        : route.fulfill({ status: 400, json: { message: 'A senha atual não confere.' } });
+    });
+    await page.goto('/opcoes/conta');
+    await expect(page.getByLabel('Nome completo', { exact: true })).toHaveValue('Conta teste');
+    await page.getByLabel('Senha atual', { exact: true }).fill('123456');
+    await page.getByRole('button', { name: 'Salvar alterações', exact: true }).click();
+    const message = page.getByRole(scenario === 'sucesso' ? 'status' : 'alert');
+    await expect(message).toBeVisible();
+    await expect
+      .poll(() =>
+        page
+          .locator('app-conta ion-content')
+          .evaluate(
+            async (el) =>
+              (await (el as HTMLElement & { getScrollElement(): Promise<HTMLElement> }).getScrollElement()).scrollTop,
+          ),
+      )
+      .toBeLessThan(5);
+    await expect(message).toBeInViewport();
+  });
+}

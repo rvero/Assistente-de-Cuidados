@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record CuidadorServicoData(
-        @NotBlank(message = "Cidade é obrigatória") String cidade,
+        @jakarta.validation.constraints.Size(max=100) @NotBlank(message = "Cidade é obrigatória") String cidade,
         @NotNull(message = "Valor por hora é obrigatório")
-        @DecimalMin(value = "0.0", inclusive = false, message = "Valor por hora deve ser maior que zero") BigDecimal valorHora
+        @jakarta.validation.constraints.Digits(integer=8,fraction=2) @DecimalMin(value = "0.0", inclusive = false, message = "Valor por hora deve ser maior que zero") BigDecimal valorHora
 ) {}

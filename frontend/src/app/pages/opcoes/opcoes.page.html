@@ -6,16 +6,17 @@
     </header>
     <div class="page-body">
       <section class="content-card">
-        <h2>Meu perfil</h2>
-        <p>
-          {{auth.usuario()?.role==='CUIDADOR'?'Atualize seus dados de acesso e sua apresentação profissional.':'Altere
-          seu nome, e-mail, CPF e senha de acesso.'}}
-        </p>
         <ion-button expand="block" routerLink="/opcoes/conta">Editar perfil</ion-button>
+        @if(auth.usuario()?.role==='CLIENTE'){<ion-button
+          expand="block"
+          fill="outline"
+          routerLink="/opcoes/paciente"
+          style="margin-top: 16px"
+          >Editar dados do paciente</ion-button
+        >}
       </section>
 
       <section class="content-card profile-section">
-        <h2>Acesso e privacidade</h2>
         <ion-button expand="block" fill="outline" (click)="sair()">Sair da conta</ion-button
         ><button
           class="delete-button"

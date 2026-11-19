@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, effect, viewChild } from '@angular/core';
 import { FormsModule, type NgForm } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { IonContent, IonButton, IonInput, IonSelect, IonSelectOption, IonTextarea } from '@ionic/angular';
@@ -17,6 +17,15 @@ import { ProfileApi, type CuidadorPerfil } from '../../services/profile-api';
   styleUrls: ['../directory.scss', './conta.page.scss'],
 })
 export class ContaPage {
+  private readonly content = viewChild(IonContent);
+  constructor() {
+    effect(() => {
+      if (this.erro() || this.sucesso()) {
+        const reduced = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        void this.content()?.scrollToTop(reduced ? 0 : 300);
+      }
+    });
+  }
   private readonly api = inject(AccountApi);
   private readonly auth = inject(Auth);
   private readonly profiles = inject(ProfileApi);
@@ -113,8 +122,13 @@ export class ContaPage {
           ? this.api.salvarCuidador(conta, {
               ...this.cuidador,
               nomeCuidador: this.cuidador.nomeCuidador.trim(),
-              nomeSocial: this.cuidador.nomeSocial?.trim() ?? '',
+              nomeSocial: '',
               curriculoUrl: this.cuidador.curriculoUrl?.trim() ?? '',
+              cidade: this.cuidador.cidade?.trim() || null,
+              valorHora:
+                this.cuidador.valorHora == null || String(this.cuidador.valorHora) === ''
+                  ? null
+                  : Number(this.cuidador.valorHora),
             })
           : this.api.salvar(conta),
       );

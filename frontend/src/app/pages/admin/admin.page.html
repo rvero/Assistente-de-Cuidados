@@ -5,7 +5,6 @@
         <span class="eyebrow">ADMINISTRAÇÃO</span><ion-button fill="outline" (click)="sair()">Sair</ion-button>
       </div>
       <h1>Gerenciar contas</h1>
-      <p>Consulte os cadastros de famílias e cuidadores.</p>
     </header>
     <div class="page-body">
       <div class="admin-counts">
@@ -36,62 +35,71 @@
       <p role="status">Carregando contas…</p>
       }@else{
       <p class="result-count">{{resultados().length}} conta(s) encontrada(s)</p>
-      <div class="carer-list">
-        @for(conta of resultados();track conta.id){
-        <article class="content-card admin-card">
-          <span class="profile-label">{{conta.role==='CLIENTE'?'Família':'Cuidador'}}</span>
-          <h2>{{conta.nome}}</h2>
-          <p class="account-email">{{conta.email}}</p>
-          <details>
-            <summary>Ver dados do perfil</summary>
-            <dl>
-              <dt>CPF</dt>
-              <dd>{{conta.cpf || 'Não informado'}}</dd>
-              @if(conta.familia;as f){
-              <dt>Paciente</dt>
-              <dd>{{f.nomePaciente}}</dd>
-              <dt>Nascimento</dt>
-              <dd>{{f.dataNascimento}}</dd>
-              <dt>Motivo do cuidado</dt>
-              <dd>{{f.finalidade==='pos_operatorio'?'Recuperação após cirurgia':'Apoio nas atividades diárias'}}</dd>
-              <dt>Alergias</dt>
-              <dd>{{f.alergias || 'Não informadas'}}</dd>
-              <dt>Orientações para o cuidado</dt>
-              <dd>{{f.recomendacoes || 'Não informadas'}}</dd>
-              } @if(conta.cuidador;as c){
-              <dt>Nome profissional</dt>
-              <dd>{{c.nomeCuidador}}</dd>
-              <dt>Nome social</dt>
-              <dd>{{c.nomeSocial || 'Não informado'}}</dd>
-              <dt>Gênero</dt>
-              <dd>{{c.genero}}</dd>
-              <dt>Nascimento</dt>
-              <dd>{{c.dataNascimento}}</dd>
-              <dt>Experiência profissional</dt>
-              <dd class="preserve-lines">{{c.descricao || 'Não informada'}}</dd>
-              <dt>Currículo</dt>
-              <dd>{{c.curriculoUrl || 'Não informado'}}</dd>
+      @for(grupo of grupos();track grupo.tipo){
+      <section class="profile-section" [attr.aria-label]="grupo.titulo">
+        <h2 style="margin-bottom: 16px">{{grupo.titulo}}</h2>
+        <div class="carer-list">
+          @for(conta of grupo.contas;track conta.id){
+          <article class="content-card admin-card">
+            <span class="profile-label">{{conta.role==='CLIENTE'?'Família':'Cuidador'}}</span>
+            <h2>{{conta.nome}}</h2>
+            <p class="account-email">{{conta.email}}</p>
+            <details>
+              <summary>Ver dados do perfil</summary>
+              <dl>
+                <dt>CPF</dt>
+                <dd>{{conta.cpf || 'Não informado'}}</dd>
+                @if(conta.familia;as f){
+                <dt>Paciente</dt>
+                <dd>{{f.nomePaciente}}</dd>
+                <dt>Nascimento</dt>
+                <dd>{{f.dataNascimento}}</dd>
+                <dt>Motivo do cuidado</dt>
+                <dd>{{f.finalidade==='pos_operatorio'?'Recuperação após cirurgia':'Apoio nas atividades diárias'}}</dd>
+                <dt>Alergias</dt>
+                <dd>{{f.alergias || 'Não informadas'}}</dd>
+                <dt>Orientações para o cuidado</dt>
+                <dd>{{f.recomendacoes || 'Não informadas'}}</dd>
+                } @if(conta.cuidador;as c){
+                <dt>Nome profissional</dt>
+                <dd>{{c.nomeCuidador}}</dd>
+
+                <dt>Gênero</dt>
+                <dd>{{c.genero}}</dd>
+                <dt>Nascimento</dt>
+                <dd>{{c.dataNascimento}}</dd>
+                <dt>Experiência profissional</dt>
+                <dd class="preserve-lines">{{c.descricao || 'Não informada'}}</dd>
+                <dt>Currículo</dt>
+                <dd>{{c.curriculoUrl || 'Não informado'}}</dd>
+                }
+              </dl>
+              @if(!conta.familia && !conta.cuidador){
+              <p class="field-note">O perfil ainda não foi preenchido.</p>
               }
-            </dl>
-            @if(!conta.familia && !conta.cuidador){
-            <p class="field-note">O perfil ainda não foi preenchido.</p>
-            }
-          </details>
-          <button
-            class="delete-button"
-            type="button"
-            (click)="pendente.set(conta)"
-            [attr.aria-label]="'Excluir conta de '+conta.nome"
-          >
-            Excluir conta
-          </button>
-        </article>
-        }@empty{
-        <p class="state-message">Nenhuma conta encontrada.</p>
-        }
-      </div>
-      }
-      <a class="curriculum-link" routerLink="/busca">Ver busca de cuidadores →</a>
+            </details>
+            @if(conta.role==='CUIDADOR'){<ion-button
+              fill="outline"
+              expand="block"
+              [routerLink]="['/cuidadores',conta.id]"
+              style="margin-bottom: 16px"
+              >Ver perfil público</ion-button
+            >}
+            <button
+              class="delete-button"
+              type="button"
+              (click)="pendente.set(conta)"
+              [attr.aria-label]="'Excluir conta de '+conta.nome"
+            >
+              Excluir conta
+            </button>
+          </article>
+          }@empty{
+          <p class="state-message">Nenhum cadastro encontrado nesta categoria.</p>
+          }
+        </div>
+      </section>
+      } }
     </div>
   </main>
   <dialog

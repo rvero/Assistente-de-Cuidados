@@ -1,22 +1,47 @@
 <ion-content
   ><main class="app-shell directory-screen">
     <header class="directory-header">
-      <span class="eyebrow">ENCONTRE APOIO</span>
       <h1>Buscar cuidador</h1>
-      <p>Conheça os profissionais cadastrados e consulte suas experiências.</p>
     </header>
     <div class="page-body">
-      <label class="search-label" for="busca-cuidador">Nome ou experiência</label>
-      <div class="search-box">
-        <span aria-hidden="true">⌕</span
-        ><input
-          id="busca-cuidador"
-          type="search"
-          placeholder="Quem você procura?"
-          [ngModel]="termo()"
-          (ngModelChange)="termo.set($event)"
-        />
-      </div>
+      <details class="filter-panel">
+        <summary>Filtrar cuidadores</summary>
+        <div class="filter-fields">
+          <label class="search-label" for="busca-cuidador">Nome</label>
+          <div class="search-box">
+            <span aria-hidden="true">⌕</span
+            ><input
+              id="busca-cuidador"
+              type="search"
+              placeholder="Quem você procura?"
+              [ngModel]="termo()"
+              (ngModelChange)="termo.set($event)"
+            />
+          </div>
+          <label class="search-label" for="filtro-cidade">Cidade</label>
+          <div class="search-box">
+            <input
+              id="filtro-cidade"
+              type="search"
+              placeholder="Todas as cidades"
+              [ngModel]="cidade()"
+              (ngModelChange)="cidade.set($event)"
+            />
+          </div>
+          <label class="search-label" for="filtro-valor">Valor máximo por hora (R$)</label>
+          <div class="search-box">
+            <input
+              id="filtro-valor"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="Sem limite"
+              [ngModel]="valorMax()"
+              (ngModelChange)="valorMax.set($event)"
+            />
+          </div>
+        </div>
+      </details>
       @if (carregando()) {
       <p class="state-message" role="status">Carregando cuidadores…</p>
       } @else if (erro()) {
@@ -32,16 +57,24 @@
           <div class="card-copy">
             <span class="profile-label">Cuidador</span>
             <h2>{{cuidador.nome}}</h2>
+            <p>{{cuidador.cidade || 'Cidade não informada'}}</p>
+            <p>
+              {{cuidador.valorHora !== null && cuidador.valorHora !== undefined ? (cuidador.valorHora |
+              currency:'BRL':'symbol':'1.2-2':'pt-BR') + ' / hora' : 'Valor por hora não informado'}}
+            </p>
             <p>{{cuidador.descricao || 'Este profissional ainda não adicionou uma apresentação.'}}</p>
             <span class="view-profile">Ver perfil <span aria-hidden="true">→</span></span>
           </div></a
         >
         } @empty {
         <div class="content-card empty-state">
-          <h2>{{termo() ? 'Nenhum resultado para esta busca' : 'Ainda não há cuidadores cadastrados'}}</h2>
+          <h2>
+            {{(termo() || cidade() || valorMax() !== null) ? 'Nenhum resultado para esta busca' : 'Ainda não há
+            cuidadores cadastrados'}}
+          </h2>
           <p>
-            {{termo() ? 'Tente outro nome ou uma palavra relacionada à experiência.' : 'Os novos profissionais
-            aparecerão aqui assim que criarem uma conta.'}}
+            {{(termo() || cidade() || valorMax() !== null) ? 'Tente outro nome, cidade ou valor máximo.' : 'Os novos
+            profissionais aparecerão aqui assim que criarem uma conta.'}}
           </p>
         </div>
         }

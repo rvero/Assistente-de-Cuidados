@@ -10,7 +10,7 @@ public class FamiliaProfile {
     private User user;
     @Column(name = "nomepaciente", nullable = false, length = 150)
     private String nomePaciente;
-    @Column(name = "data_nascimento", nullable = false)
+    @Column(name = "data_nascimento")
     private java.time.LocalDate dataNascimento;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

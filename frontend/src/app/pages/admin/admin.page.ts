@@ -46,6 +46,12 @@ export class AdminPage {
         [c.nome, c.email, c.cpf ?? ''].join(' ').toLowerCase().includes(this.termo().trim().toLowerCase()),
     ),
   );
+  readonly grupos = computed(() =>
+    [
+      { tipo: 'CLIENTE', titulo: 'Famílias', contas: this.resultados().filter((c) => c.role === 'CLIENTE') },
+      { tipo: 'CUIDADOR', titulo: 'Cuidadores', contas: this.resultados().filter((c) => c.role === 'CUIDADOR') },
+    ].filter((g) => !this.tipo() || this.tipo() === g.tipo),
+  );
   readonly familias = computed(() => this.contas().filter((c) => c.role === 'CLIENTE').length);
   readonly cuidadores = computed(() => this.contas().filter((c) => c.role === 'CUIDADOR').length);
   ionViewWillEnter(): void {
