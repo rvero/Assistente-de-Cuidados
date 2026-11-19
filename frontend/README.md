@@ -2,15 +2,7 @@
 
 Aplicativo mobile desenvolvido com Ionic, Angular e TypeScript. A interface permite criar uma conta, entrar, sair e preencher o perfil de família ou cuidador.
 
-## Executar a apresentação local
-
-Na raiz do projeto:
-
-```powershell
-.\start-demo.ps1
-```
-
-Abra http://localhost:8081 após a inicialização. A interface compilada e a API usam o mesmo endereço. O MySQL precisa estar configurado conforme ../database/README.md.
+## Publicação
 
 Para publicar, os arquivos `netlify.toml` e `render.yaml` estão na raiz do repositório. Configure `API_BASE_URL` no Netlify com a origem HTTPS da API no Render, sem `/api`.
 

@@ -24,10 +24,11 @@ Na raiz do projeto, informe as credenciais daquela máquina:
 $env:DB_URL = 'jdbc:mysql://127.0.0.1:3306/banco'
 $env:DB_USERNAME = 'seu_usuario_mysql'
 $env:DB_PASSWORD = 'sua_senha_mysql'
-.\start-demo.ps1
+cd backend
+.\mvnw.cmd spring-boot:run
 ```
 
-Não registre credenciais reais no Git. O script também usa JAVA_HOME ou o JDK portátil disponível em .local/java.
+Não registre credenciais reais no Git. Configure JAVA_HOME com o JDK 25 para executar o backend.
 
 ## Perfis e autenticação
 
