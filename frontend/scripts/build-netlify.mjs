@@ -1,0 +1,11 @@
+import { spawnSync } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { redirectRules } from './netlify-config.mjs';
+const rules = redirectRules(process.env.API_BASE_URL);
+const cwd = fileURLToPath(new URL('../', import.meta.url));
+const cli = fileURLToPath(new URL('../node_modules/@angular/cli/bin/ng.js', import.meta.url));
+const result = spawnSync(process.execPath, [cli, 'build', '--configuration', 'production'], { cwd, stdio: 'inherit' });
+if (result.status !== 0) process.exit(result.status ?? 1);
+writeFileSync(new URL('../www/_redirects', import.meta.url), rules);
+console.log('Rotas da API e do Angular preparadas para o Netlify.');

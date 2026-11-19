@@ -16,7 +16,9 @@
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "ng test --no-watch",
     "test:unit:watch": "ng test --watch",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "build:netlify": "node scripts/build-netlify.mjs",
+    "test:deploy": "node --test scripts/netlify-config.test.mjs"
   },
   "private": true,
   "dependencies": {

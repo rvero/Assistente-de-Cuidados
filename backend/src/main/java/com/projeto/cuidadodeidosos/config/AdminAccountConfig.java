@@ -5,7 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
-@Profile("!test")
+@Profile("!test & !cloud")
 public class AdminAccountConfig {
     @Bean CommandLineRunner createDemoAdmin(UserRepository users, PasswordEncoder passwords) {
         return args -> {

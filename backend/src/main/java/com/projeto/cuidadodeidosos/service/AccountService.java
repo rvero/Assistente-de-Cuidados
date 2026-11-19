@@ -11,6 +11,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Locale;
 @Service
 public class AccountService {
+    @org.springframework.beans.factory.annotation.Value("${admin.email:admin@admin.com}")
+    private String adminEmail;
     private final UserRepository users; private final PasswordEncoder passwords; private final JwtService jwt; private final DirectoryService directory; private final ProfileService profiles;
     public AccountService(UserRepository users, PasswordEncoder passwords, JwtService jwt, DirectoryService directory, ProfileService profiles) {this.users=users;this.passwords=passwords;this.jwt=jwt;this.directory=directory;this.profiles=profiles;}
     public record AccountData(String nome, String email, String cpf) {}
@@ -21,7 +23,7 @@ public class AccountService {
     @Transactional
     public LoginResponse update(String email, AccountUpdateRequest d) {
         User u=owner(email);confirm(u,d.senhaAtual());String nextEmail=d.email().trim().toLowerCase(Locale.ROOT);String cpf=d.cpf().replaceAll("[^0-9]", "");
-        if("admin@admin.com".equals(nextEmail))throw new ResponseStatusException(HttpStatus.CONFLICT,"Este e-mail é reservado à administração.");
+        if(adminEmail.trim().equalsIgnoreCase(nextEmail))throw new ResponseStatusException(HttpStatus.CONFLICT,"Este e-mail é reservado à administração.");
         if(users.findByEmail(nextEmail).filter(other->!other.getId().equals(u.getId())).isPresent())throw new ResponseStatusException(HttpStatus.CONFLICT,"Este e-mail já está cadastrado.");
         if(users.findByCpf(cpf).filter(other->!other.getId().equals(u.getId())).isPresent())throw new ResponseStatusException(HttpStatus.CONFLICT,"Este CPF já está cadastrado.");
         u.setNome(d.nome().trim());u.setEmail(nextEmail);u.setCpf(cpf);

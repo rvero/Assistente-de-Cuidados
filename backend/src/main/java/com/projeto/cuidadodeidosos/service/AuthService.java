@@ -14,6 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class AuthService {
 
+    @org.springframework.beans.factory.annotation.Value("${admin.email:admin@admin.com}")
+    private String adminEmail;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -29,7 +31,7 @@ public class AuthService {
     public void register(RegisterRequest request) {
         String email = request.email().trim().toLowerCase();
 
-        if ("admin@admin.com".equals(email)) throw new ResponseStatusException(HttpStatus.CONFLICT, "Este e-mail é reservado à administração.");
+        if (adminEmail.trim().equalsIgnoreCase(email)) throw new ResponseStatusException(HttpStatus.CONFLICT, "Este e-mail é reservado à administração.");
         if (userRepository.existsByEmail(email)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado");
         }

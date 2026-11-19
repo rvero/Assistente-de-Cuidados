@@ -39,3 +39,8 @@ backend/data/
 # Arquivos gerados e planos internos
 /output/pdf/
 /docs/superpowers/plans/
+
+# Credenciais de ambiente
+.env
+.env.*
+!.env.example

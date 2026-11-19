@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/health").permitAll()
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/", "/index.html", "/inicio", "/login", "/cadastro", "/perfil", "/home-cliente", "/home-cuidador", "/busca", "/cuidadores/*", "/admin", "/historico", "/contatos", "/opcoes", "/opcoes/conta", "/opcoes/paciente", "/contatos/*", "/*.js", "/*.css", "/assets/**", "/favicon.ico").permitAll()
                         .requestMatchers("/auth/**", "/api/auth/**").permitAll()
@@ -52,16 +53,11 @@ public class SecurityConfig {
 
     // Libera o front-end a chamar a API. Ajuste as portas/URL do front aqui.
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource(@org.springframework.beans.factory.annotation.Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:5173,http://localhost:4200,http://localhost:8100,http://localhost,https://localhost,capacitor://localhost}") String origins) {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(
-                "http://localhost:3000",
-                "http://localhost:5173",
-                "http://localhost:4200",
-                "http://localhost:8100",
-                "http://localhost",
-                "https://localhost",
-                "capacitor://localhost"));
+        var allowed=java.util.Arrays.stream(origins.split(",")).map(String::trim).filter(s -> !s.isBlank()).toList();
+        if(allowed.isEmpty() || allowed.stream().anyMatch(s -> s.contains("*"))) throw new IllegalArgumentException("Informe os domínios exatos em CORS_ALLOWED_ORIGINS.");
+        config.setAllowedOrigins(allowed);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
 

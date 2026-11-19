@@ -31,6 +31,11 @@ class ProfileIntegrationTests {
         request.method(method, body == null ? HttpRequest.BodyPublishers.noBody() : HttpRequest.BodyPublishers.ofString(body));
         return HttpClient.newHttpClient().send(request.build(), HttpResponse.BodyHandlers.ofString());
     }
+    @Test void healthIsAvailableWithoutAuthentication() throws Exception {
+        var response = call("GET", "/api/health", null, null);
+        assertEquals(200, response.statusCode());
+        assertEquals("{\"status\":\"UP\"}", response.body());
+    }
     private final String family = """
         {"nomePaciente":"Paciente ficticio","dataNascimento":"1950-01-01","finalidade":"assistencia_incapaz","alergias":"Nenhuma informada","recomendacoes":"Dados de teste"}
         """;
