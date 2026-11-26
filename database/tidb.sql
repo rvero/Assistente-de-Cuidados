@@ -93,6 +93,8 @@ CREATE TABLE IF NOT EXISTS contratacoes (
     aceito_em TIMESTAMP(6) NULL,
     encerrado_em TIMESTAMP(6) NULL,
     legado BOOLEAN NOT NULL DEFAULT FALSE,
+    conclusao_familia_em TIMESTAMP(6) NULL,
+    conclusao_cuidador_em TIMESTAMP(6) NULL,
     paciente_nome VARCHAR(255),
     finalidade VARCHAR(255),
     alergias TEXT,

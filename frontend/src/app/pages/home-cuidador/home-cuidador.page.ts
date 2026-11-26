@@ -5,6 +5,7 @@ import { IonContent, IonButton } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 import { Auth } from '../../services/auth';
 import { ContratoApi, ESTADOS, type Contrato } from '../../services/contrato-api';
+import { iniciarAtualizacao } from '../../services/live-refresh';
 import { accountError } from '../../services/account-error';
 @Component({selector:'app-home-cuidador',imports:[DatePipe,RouterLink,IonContent,IonButton],styleUrls:['../directory.scss'],
  template:`<ion-content><main class="app-shell directory-screen"><header class="directory-header"><h1>Solicitações</h1></header><div class="page-body">
@@ -16,8 +17,11 @@ export class HomeCuidadorPage {
  private readonly api=inject(ContratoApi);private readonly auth=inject(Auth);readonly estados=ESTADOS;
  readonly itens=signal<Contrato[]>([]);readonly ativos=computed(()=>this.itens().filter(c=>['PENDENTE','ACEITO'].includes(c.status)));
  readonly carregando=signal(true);readonly erro=signal('');private version=0;
- ionViewWillEnter():void{void this.carregar();}ionViewWillLeave():void{this.version++;this.itens.set([]);}
- async carregar():Promise<void>{const v=++this.version;const token=this.auth.token;this.carregando.set(true);this.erro.set('');
- try{const itens=await firstValueFrom(this.api.listar(true));if(v===this.version&&token===this.auth.token)this.itens.set(itens);}
- catch(e){if(v===this.version&&token===this.auth.token)this.erro.set(accountError(e));}finally{if(v===this.version&&token===this.auth.token)this.carregando.set(false);}}
+ private consultando=false;private pararAtualizacao?:()=>void;
+ ionViewWillEnter():void{this.pararAtualizacao?.();void this.carregar();this.pararAtualizacao=iniciarAtualizacao(()=>void this.carregar(true));}
+ ionViewWillLeave():void{this.pararAtualizacao?.();this.pararAtualizacao=undefined;this.version++;this.itens.set([]);this.consultando=false;}
+ ngOnDestroy():void{this.pararAtualizacao?.();}
+ async carregar(silencioso=false):Promise<void>{if(this.consultando)return;this.consultando=true;const v=++this.version;const token=this.auth.token;if(!silencioso)this.carregando.set(true);
+ try{const itens=await firstValueFrom(this.api.listar(true));if(v===this.version&&token===this.auth.token){this.itens.set(itens);this.erro.set('');}}
+ catch(e){if(v===this.version&&token===this.auth.token)this.erro.set(accountError(e));}finally{this.consultando=false;if(v===this.version&&token===this.auth.token)this.carregando.set(false);}}
 }

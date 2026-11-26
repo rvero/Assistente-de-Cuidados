@@ -24,7 +24,7 @@ public class ContratacaoService {
         this.users=users; this.contratos=contratos; this.familias=familias; this.cuidadores=cuidadores; this.reservas=reservas; this.agenda=agenda;
     }
     public record Item(Long id, Long clienteId, Long cuidadorId, String familia, String cuidador,
-            String cidade, BigDecimal valorHora, String status, Instant criadoEm, Instant aceitoEm, Instant encerradoEm, boolean legado, List<LocalDate> datas) {}
+            String cidade, BigDecimal valorHora, String status, Instant criadoEm, Instant aceitoEm, Instant encerradoEm, boolean legado, Instant conclusaoFamiliaEm, Instant conclusaoCuidadorEm, List<LocalDate> datas) {}
     public record Paciente(String nomePaciente, String finalidade, String alergias, String recomendacoes) {}
     public record Detalhe(Item contrato, Paciente paciente) {}
     private User usuario(String email, String papel) {
@@ -34,14 +34,15 @@ public class ContratacaoService {
     }
     private Item item(Contratacao c) {
         return new Item(c.getId(),c.getClienteId(),c.getCuidadorId(),c.getFamilia(),c.getCuidador(),c.getCidade(),c.getValorHora(),
-                c.getStatus(),c.getCriadoEm(),c.getAceitoEm(),c.getEncerradoEm(),c.isLegado(),c.getDatas().stream().sorted().toList());
+                c.getStatus(),c.getCriadoEm(),c.getAceitoEm(),c.getEncerradoEm(),c.isLegado(),c.getConclusaoFamiliaEm(),c.getConclusaoCuidadorEm(),c.getDatas().stream().sorted().toList());
     }
     private LocalDate hoje() { return LocalDate.now(ZoneId.of("America/Sao_Paulo")); }
     private void encerrarVencidos(Long userId) {
         for (Contratacao c: contratos.ativos(userId)) {
-            LocalDate limite="PENDENTE".equals(c.getStatus()) ? Collections.min(c.getDatas()) : Collections.max(c.getDatas());
-            if (limite.isBefore(hoje())) {
-                c.encerrar("PENDENTE".equals(c.getStatus()) ? "EXPIRADO" : "CONCLUIDO");
+            // Contratos aceitos só encerram com as duas confirmações.
+            if ("PENDENTE".equals(c.getStatus()) && !c.getDatas().isEmpty()
+                    && Collections.min(c.getDatas()).isBefore(hoje())) {
+                c.encerrar("EXPIRADO");
                 reservas.deleteByContratacaoId(c.getId());
             }
         }
@@ -95,13 +96,26 @@ public class ContratacaoService {
         if (aceitar) c.aceitar(); else { c.encerrar("RECUSADO"); reservas.deleteByContratacaoId(c.getId()); }
         return item(c);
     }
-    public Item cancelar(String email,Long id) {
-        User u=usuario(email,"CLIENTE");
-        var c=contratos.bloquear(id).filter(v->v.getClienteId().equals(u.getId()))
+    public Item cancelar(String email,Long id,String papel) {
+        User u=usuario(email,papel);
+        var c=contratos.bloquear(id).filter(v->"CLIENTE".equals(papel)?v.getClienteId().equals(u.getId()):v.getCuidadorId().equals(u.getId()))
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Contrato não encontrado."));
         if (!c.ativo()) throw new ResponseStatusException(HttpStatus.CONFLICT,"Este contrato já foi encerrado.");
+        if ("CUIDADOR".equals(papel) && !"ACEITO".equals(c.getStatus()))
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Recuse o pedido que ainda não foi aceito.");
         c.encerrar("CANCELADO"); reservas.deleteByContratacaoId(c.getId()); return item(c);
     }
+    public Item concluir(String email,Long id,String papel) {
+        User u=usuario(email,papel);
+        var c=contratos.bloquear(id).filter(v->"CLIENTE".equals(papel)?v.getClienteId().equals(u.getId()):v.getCuidadorId().equals(u.getId()))
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Contrato não encontrado."));
+        if ("CONCLUIDO".equals(c.getStatus()) && c.getConclusaoFamiliaEm()!=null && c.getConclusaoCuidadorEm()!=null) return item(c);
+        if (!"ACEITO".equals(c.getStatus())) throw new ResponseStatusException(HttpStatus.CONFLICT,"Somente contratos aceitos podem ser concluídos.");
+        c.confirmarConclusao("CLIENTE".equals(papel));
+        if ("CONCLUIDO".equals(c.getStatus())) reservas.deleteByContratacaoId(c.getId());
+        return item(c);
+    }
+
     public void removerConta(Long id) {
         for (var c:contratos.vinculados(id)) {
             if(c.ativo()) { c.encerrar("CANCELADO"); reservas.deleteByContratacaoId(c.getId()); }

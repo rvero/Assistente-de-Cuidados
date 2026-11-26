@@ -8,6 +8,7 @@ import { Auth } from './auth';
 export interface Contrato {
   id:number; clienteId:number; cuidadorId:number; familia:string; cuidador:string;
   cidade:string|null; valorHora:number|null; status:string; criadoEm:string;
+  conclusaoFamiliaEm:string|null; conclusaoCuidadorEm:string|null;
   aceitoEm:string|null; encerradoEm:string|null; legado:boolean; datas:string[];
 }
 export interface PedidoDetalhe {
@@ -26,6 +27,7 @@ export class ContratoApi {
   readonly atual=signal<Contrato|null>(null);
   private version=0;
   definirAtual(c: Contrato|null): void {
+    this.version++;
     this.atual.set(c);
     this.auth.definirContratoAtivo(!!c && ['PENDENTE','ACEITO'].includes(c.status));
   }
@@ -45,7 +47,8 @@ export class ContratoApi {
     return c;
   }
   solicitar(cuidadorId:number,datas:string[]){return this.http.post<Contrato>(environment.apiUrl+'/cliente/contratos',{cuidadorId,datas});}
-  cancelar(id:number){return this.http.post<Contrato>(`${environment.apiUrl}/cliente/contratos/${id}/cancelar`,{});}
+  cancelar(id:number,cuidador=false){return this.http.post<Contrato>(`${environment.apiUrl}/${cuidador?'cuidador':'cliente'}/contratos/${id}/cancelar`,{});}
+  concluir(id:number,cuidador=false){return this.http.post<Contrato>(`${environment.apiUrl}/${cuidador?'cuidador':'cliente'}/contratos/${id}/concluir`,{});}
   listar(cuidador:boolean){return this.http.get<Contrato[]>(environment.apiUrl+(cuidador?'/cuidador':'/cliente')+'/contratos');}
   detalhe(id:string){return this.http.get<PedidoDetalhe>(environment.apiUrl+'/cuidador/contratos/'+encodeURIComponent(id));}
   responder(id:number,aceitar:boolean){return this.http.post<Contrato>(`${environment.apiUrl}/cuidador/contratos/${id}/${aceitar?'aceitar':'recusar'}`,{});}

@@ -16,7 +16,13 @@ public class ContratacaoController {
     @GetMapping("/api/cliente/contratos")
     public List<ContratacaoService.Item> familia(Authentication a) { return service.listar(a.getName(),"CLIENTE"); }
     @PostMapping("/api/cliente/contratos/{id}/cancelar")
-    public ContratacaoService.Item cancelar(Authentication a,@PathVariable("id") Long id) { return service.cancelar(a.getName(),id); }
+    public ContratacaoService.Item cancelar(Authentication a,@PathVariable("id") Long id) { return service.cancelar(a.getName(),id,"CLIENTE"); }
+    @PostMapping("/api/cliente/contratos/{id}/concluir")
+    public ContratacaoService.Item concluirFamilia(Authentication a,@PathVariable("id") Long id) { return service.concluir(a.getName(),id,"CLIENTE"); }
+    @PostMapping("/api/cuidador/contratos/{id}/concluir")
+    public ContratacaoService.Item concluirCuidador(Authentication a,@PathVariable("id") Long id) { return service.concluir(a.getName(),id,"CUIDADOR"); }
+    @PostMapping("/api/cuidador/contratos/{id}/cancelar")
+    public ContratacaoService.Item cancelarCuidador(Authentication a,@PathVariable("id") Long id) { return service.cancelar(a.getName(),id,"CUIDADOR"); }
     @GetMapping("/api/cuidador/contratos")
     public List<ContratacaoService.Item> cuidador(Authentication a) { return service.listar(a.getName(),"CUIDADOR"); }
     @GetMapping("/api/cuidador/contratos/{id}")

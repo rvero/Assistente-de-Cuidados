@@ -24,6 +24,15 @@ public class Contratacao {
     public boolean isLegado() { return legado; }
     private Instant aceitoEm;
     private Instant encerradoEm;
+    private Instant conclusaoFamiliaEm;
+    private Instant conclusaoCuidadorEm;
+    public Instant getConclusaoFamiliaEm() { return conclusaoFamiliaEm; }
+    public Instant getConclusaoCuidadorEm() { return conclusaoCuidadorEm; }
+    public void confirmarConclusao(boolean familia) {
+        if (familia && conclusaoFamiliaEm == null) conclusaoFamiliaEm = Instant.now();
+        if (!familia && conclusaoCuidadorEm == null) conclusaoCuidadorEm = Instant.now();
+        if (conclusaoFamiliaEm != null && conclusaoCuidadorEm != null) encerrar("CONCLUIDO");
+    }
     private String pacienteNome;
     private String finalidade;
     @Column(columnDefinition = "TEXT") private String alergias;
