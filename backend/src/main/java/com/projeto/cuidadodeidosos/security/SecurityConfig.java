@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/health").permitAll()
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/", "/index.html", "/inicio", "/login", "/cadastro", "/perfil", "/home-cliente", "/home-cuidador", "/busca", "/cuidadores/*", "/admin", "/historico", "/contatos", "/opcoes", "/opcoes/conta", "/opcoes/paciente", "/contatos/*", "/*.js", "/*.css", "/assets/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/", "/index.html", "/inicio", "/login", "/cadastro", "/perfil", "/home-cliente", "/home-cuidador", "/busca", "/cuidadores/*", "/admin", "/historico", "/agenda", "/contatos", "/opcoes", "/opcoes/conta", "/opcoes/paciente", "/contatos/*", "/*.js", "/*.css", "/assets/**", "/favicon.ico").permitAll()
                         .requestMatchers("/auth/**", "/api/auth/**").permitAll()
                         .requestMatchers("/cuidador/**", "/api/cuidador/**").hasRole("CUIDADOR")
                         .requestMatchers("/cliente/**", "/api/cliente/**").hasRole("CLIENTE")

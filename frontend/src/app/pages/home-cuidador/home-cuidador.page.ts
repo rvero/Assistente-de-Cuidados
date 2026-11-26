@@ -17,6 +17,7 @@ import { accountError } from '../../services/account-error';
         <h1>Contatos recebidos</h1>
       </header>
       <div class="page-body">
+        <ion-button expand="block" fill="outline" routerLink="/agenda">Agenda</ion-button>
         @if (carregando()) {
           <p role="status">Carregando contatos…</p>
         } @else if (erro()) {
@@ -37,7 +38,7 @@ import { accountError } from '../../services/account-error';
             } @empty {
               <section class="content-card empty-state">
                 <h2>Nenhum contato recebido</h2>
-                <p>Quando uma família solicitar contato pelo seu perfil, o nome e o e-mail dela aparecerão aqui.</p>
+
               </section>
             }
           </div>

@@ -8,6 +8,10 @@ import com.projeto.cuidadodeidosos.repository.AgendamentoRepository;
 import com.projeto.cuidadodeidosos.repository.DisponibilidadeCuidadorRepository;
 import com.projeto.cuidadodeidosos.repository.UserRepository;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.LinkedHashSet;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,6 +33,32 @@ public class AgendaService {
     public record AgendamentoRequest(
             @NotNull(message = "Cuidador é obrigatório") Long cuidadorId,
             @NotNull(message = "Data é obrigatória") LocalDate data) {}
+
+    public record AgendamentosRequest(
+            @NotNull Long cuidadorId,
+            @NotNull @Size(min = 1, max = 31, message = "Selecione de 1 a 31 datas") List<@NotNull LocalDate> datas) {}
+
+    public record CalendarioData(List<DiaSemana> dias, List<LocalDate> datasOcupadas) {}
+
+    @Transactional(readOnly = true)
+    public CalendarioData calendario(Long cuidadorId, LocalDate inicio, LocalDate fim) {
+        if (fim.isBefore(inicio) || ChronoUnit.DAYS.between(inicio, fim) > 62) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Intervalo inválido");
+        }
+        var disponibilidade = diasDoCuidador(cuidadorId);
+        var ocupadas = agendamentos.findByCuidadorIdAndDataBetweenOrderByDataAsc(cuidadorId, inicio, fim)
+                .stream().map(Agendamento::getData).toList();
+        return new CalendarioData(disponibilidade.dias(), ocupadas);
+    }
+
+    public List<AgendamentoItem> agendarDatas(String email, AgendamentosRequest request) {
+        // Uma única transação: se alguma data falhar, nenhuma reserva é gravada.
+        if (new LinkedHashSet<>(request.datas()).size() != request.datas().size()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Remova as datas repetidas");
+        }
+        return request.datas().stream().sorted()
+                .map(data -> agendar(email, new AgendamentoRequest(request.cuidadorId(), data))).toList();
+    }
 
     public record AgendamentoItem(Long id, Long cuidadorId, String cuidador,
                                   Long clienteId, String cliente,
@@ -112,7 +142,7 @@ public class AgendaService {
                 .filter(u -> "CUIDADOR".equals(u.getRole()))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuidador não encontrado"));
 
-        if (r.data().isBefore(LocalDate.now())) {
+        if (r.data().isBefore(LocalDate.now(ZoneId.of("America/Sao_Paulo")))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A data não pode estar no passado");
         }
         if (!disponibilidades.existsByCuidadorIdAndDiaSemana(cuidador.getId(), DiaSemana.de(r.data()))) {

@@ -6,6 +6,7 @@
     </header>
     <div class="page-body">
       <section class="content-card">
+        <ion-button expand="block" fill="outline" routerLink="/agenda">Agenda</ion-button>
         <ion-button expand="block" routerLink="/opcoes/conta">Editar perfil</ion-button>
         @if(auth.usuario()?.role==='CLIENTE'){<ion-button
           expand="block"

@@ -1,7 +1,6 @@
 <ion-content
   ><main class="app-shell directory-screen">
     <header class="directory-header">
-      <span class="eyebrow">CONHEÇA O PROFISSIONAL</span>
       <div class="header-title-row">
         <a [routerLink]="auth.usuario()?.role==='ADMIN'?'/admin':'/busca'" class="back-arrow" aria-label="Voltar"
           ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -28,7 +27,7 @@
       </section>
       <section class="content-card profile-section">
         <h2>Apresentação e experiência</h2>
-        <p class="preserve-lines">{{c.descricao || 'Este profissional ainda não preencheu sua apresentação.'}}</p>
+        <p class="preserve-lines">{{c.descricao || 'Sem apresentação.'}}</p>
       </section>
       @if(safeUrl(c.curriculoUrl); as url){<a
         class="curriculum-link"
@@ -37,14 +36,14 @@
         rel="noopener noreferrer"
         >Consultar currículo ↗</a
       >} @if(!c.perfilCompleto){
-      <p class="field-note">O perfil profissional ainda está sendo preenchido.</p>
-      }} @if(cuidador() && auth.usuario()?.role==='CLIENTE'){
+      <p class="field-note">Perfil incompleto.</p>
+      }} @if(cuidador(); as profissional){ @if(auth.usuario()?.role==='CLIENTE'){<app-booking [cuidadorId]="profissional.id" />} } @if(cuidador() && auth.usuario()?.role==='CLIENTE'){
       <section class="content-card profile-section">
         <h2>Solicitar contato</h2>
-        <p>Ao solicitar contato, seu nome, e-mail e os dados do paciente serão compartilhados com este cuidador.</p>
+        <p>Compartilha seu nome, e-mail e dados do paciente com o cuidador.</p>
         @if(contatoEmail()){
         <p class="notice notice-success" role="status">
-          Seu interesse foi registrado. O cuidador poderá consultar seus dados de contato.
+          Contato solicitado.
         </p>
         <a class="curriculum-link" [href]="'mailto:'+contatoEmail()">Escrever para {{contatoEmail()}} ↗</a>}
         @else{<ion-button expand="block" (click)="contatar()" [disabled]="enviando()"

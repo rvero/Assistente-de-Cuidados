@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @RestController
 public class AgendaController {
@@ -33,6 +35,20 @@ public class AgendaController {
     @GetMapping({"/api/cuidadores/{id}/disponibilidade", "/cliente/cuidadores/{id}/disponibilidade"})
     public AgendaService.DisponibilidadeData diasDoCuidador(@PathVariable("id") Long id) {
         return service.diasDoCuidador(id);
+    }
+
+    @GetMapping("/api/cuidadores/{id}/agenda")
+    public AgendaService.CalendarioData calendario(@PathVariable("id") Long id,
+            @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+        return service.calendario(id, inicio, fim);
+    }
+
+    @PostMapping("/api/cliente/agendamentos/lote")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<AgendaService.AgendamentoItem> agendarDatas(Authentication auth,
+            @Valid @RequestBody AgendaService.AgendamentosRequest request) {
+        return service.agendarDatas(auth.getName(), request);
     }
 
     // Cliente marca um dia

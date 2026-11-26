@@ -48,6 +48,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./pages/historico/historico.page').then((m) => m.HistoricoPage),
   },
+  { path: 'agenda', canActivate: [authGuard], loadComponent: () => import('./pages/agenda/agenda.page').then(m => m.AgendaPage) },
   { path: 'contatos', redirectTo: 'home-cuidador', pathMatch: 'full' },
   {
     path: 'opcoes',
