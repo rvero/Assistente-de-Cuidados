@@ -30,9 +30,13 @@ import { accountError } from '../services/account-error';
         @for(data of selecionadas(); track data) { <button type="button" (click)="alternar(data)" [disabled]="enviando()" [attr.aria-label]="'Remover '+data">{{data | date:'dd/MM/yyyy':'UTC'}} ×</button> }
       </div>
     }
-    <p class="legend">Ao continuar, os dados do paciente serão compartilhados com este cuidador.</p>
-    <a routerLink="/opcoes/paciente">Editar dados do paciente</a>
-    <ion-button expand="block" (click)="confirmar()" [disabled]="!selecionadas().length || carregando() || enviando() || !!erro()">{{enviando() ? 'Enviando…' : 'Continuar'}}</ion-button>
+    <div class="booking-footer">
+      <p class="legend">Ao continuar, os dados do paciente serão compartilhados com este cuidador.</p>
+      <div class="action-stack">
+        <ion-button expand="block" fill="outline" routerLink="/opcoes/paciente">Editar dados do paciente</ion-button>
+        <ion-button expand="block" (click)="confirmar()" [disabled]="!selecionadas().length || carregando() || enviando() || !!erro()">{{enviando() ? 'Enviando…' : 'Continuar'}}</ion-button>
+      </div>
+    </div>
   </section>`,
   styles: [`
     :host { display:block; } h2 {font-size:18px;} h3 {font-size:16px;} .month-nav {display:flex;align-items:center;justify-content:space-between;gap:8px;}
@@ -42,8 +46,13 @@ import { accountError } from '../services/account-error';
     button:disabled {background:#edf0ef;color:#a4aaa8;border-color:#e4e8e6;cursor:default;}
     .calendar button.chosen {background:#2f7d6e;color:white;border-color:#2f7d6e;}
     button:focus-visible {outline:3px solid #6c63a8;outline-offset:2px;}
-    .legend {font-size:12px;color:#52666b;} .selected-days {display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
-    .selected-days button {padding:8px;font-size:14px;}
+    .legend {font-size:12px;color:#52666b;} .selected-days {display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0;}
+    .selected-days button {padding:8px 12px;font-size:14px;}
+    .booking-footer {border-top:1px solid #e0e8e5;padding-top:20px;margin-top:24px;}
+    .booking-footer .legend {margin-bottom:16px;font-size:14px;line-height:1.5;}
+    .month-nav h3 {text-align:center;}
+    .month-nav button {flex-shrink:0;}
+    @media(max-width:359px){.calendar{gap:3px;}.selected-days button{padding:8px;font-size:13px;}}
   `],
 })
 export class BookingComponent implements OnInit {

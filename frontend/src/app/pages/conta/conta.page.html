@@ -21,7 +21,7 @@
         <section class="profile-fields" aria-labelledby="dados-sensiveis">
           <h2 id="dados-sensiveis">{{profissional()?'Dados sensíveis':'Dados da conta'}}</h2>
           @if(profissional()){
-          <p class="section-description">Estas informações não aparecem no seu perfil público.</p>
+          <p class="section-description">Não aparecem no perfil público.</p>
           }
           <div class="field">
             <span class="input-label" id="conta-nome">Nome completo</span
@@ -91,7 +91,7 @@
               autocomplete="current-password"
               [disabled]="salvando()"
             />
-            <p class="field-note">Confirme sua senha atual para salvar as alterações.</p>
+            <p class="field-note">Obrigatória para salvar.</p>
           </div>
           @if(profissional()){
           <div class="field">
@@ -129,7 +129,7 @@
         <section class="profile-fields public-fields" aria-labelledby="dados-publicos">
           <h2 id="dados-publicos">Dados públicos</h2>
           <p class="section-description">
-            Estas informações poderão ser consultadas pelas famílias na busca de cuidadores.
+            Exibidos no perfil público.
           </p>
           <div class="field">
             <span class="input-label" id="perfil-cidade">Cidade de atendimento</span

@@ -16,11 +16,11 @@ import { accountError } from '../../services/account-error';
       <section class="content-card public-profile"><span class="avatar large" aria-hidden="true">{{c.cuidador.charAt(0)}}</span><h2>{{c.cuidador}}</h2>
         @if(c.cidade){<p>{{c.cidade}}</p>}
         @if(c.valorHora!==null){<p>{{c.valorHora | currency:'BRL':'symbol':'1.2-2':'pt-BR'}} / hora</p>}
-        <p class="notice notice-success" role="status">{{estados[c.status]}}</p>
+        <p class="contract-status" [attr.data-status]="c.status" role="status">{{estados[c.status]}}</p>
         @if(c.legado){<p>Contrato anterior</p>}@else{<p>{{c.aceitoEm?'Contratado em':'Solicitado em'}} {{(c.aceitoEm||c.criadoEm)|date:'dd/MM/yyyy'}}</p>}
         <a [routerLink]="['/cuidadores',c.cuidadorId]">Ver perfil →</a>
       </section>
-      <section class="content-card profile-section"><h2>Dias contratados</h2><ul>@for(data of c.datas;track data){<li>{{data|date:'dd/MM/yyyy':'UTC'}}</li>}</ul></section>
+      <section class="content-card profile-section"><h2>Dias contratados</h2><ul class="date-list">@for(data of c.datas;track data){<li>{{data|date:'dd/MM/yyyy':'UTC'}}</li>}</ul></section>
       @if(confirmando()){
         <section class="content-card profile-section"><h2>Cancelar contrato?</h2><ion-button expand="block" color="danger" (click)="cancelar()" [disabled]="ocupado()">{{ocupado()?'Cancelando…':'Confirmar cancelamento'}}</ion-button><ion-button expand="block" fill="outline" (click)="confirmando.set(false)" [disabled]="ocupado()">Voltar</ion-button></section>
       }@else{<ion-button expand="block" fill="outline" color="danger" (click)="confirmando.set(true)" [disabled]="ocupado()">Cancelar contrato</ion-button>}

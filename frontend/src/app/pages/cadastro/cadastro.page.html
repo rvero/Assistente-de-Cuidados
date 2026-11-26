@@ -20,7 +20,6 @@
       <nav class="auth-tabs" aria-label="Acesso à conta">
         <a routerLink="/login">Entrar</a><a routerLink="/cadastro" class="active" aria-current="page">Criar conta</a>
       </nav>
-      <p class="section-intro">Selecione o tipo de conta e informe seus dados.</p>
 
       <form #form="ngForm" (ngSubmit)="cadastrar(form)" novalidate>
         <p class="type-label" id="tipo-label">Tipo de conta</p>
@@ -36,7 +35,7 @@
           <ion-item lines="none"><ion-radio value="CUIDADOR">Cuidador</ion-radio></ion-item>
         </ion-radio-group>
         <div class="field">
-          <span class="input-label" id="cadastro-cpf-label">CPF</span>
+          <span class="input-label" id="cadastro-cpf-label">CPF do titular</span>
           <ion-input
             fill="outline"
             aria-labelledby="cadastro-cpf-label"
@@ -48,7 +47,6 @@
             placeholder="000.000.000-00"
             [disabled]="ocupado()"
           ></ion-input>
-          <p class="field-note">Informe o CPF do titular da conta.</p>
         </div>
         <div class="field">
           <span class="input-label" id="cadastro-nome-label">Nome completo</span>

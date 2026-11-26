@@ -5,23 +5,21 @@
       <p>{{auth.usuario()?.nome}}</p>
     </header>
     <div class="page-body">
-      <section class="content-card">
+      <section class="content-card action-stack">
         @if(auth.usuario()?.role==='CUIDADOR'){<ion-button expand="block" fill="outline" routerLink="/agenda">Editar agenda</ion-button>}
         <ion-button expand="block" routerLink="/opcoes/conta">Editar perfil</ion-button>
         @if(auth.usuario()?.role==='CLIENTE'){<ion-button
           expand="block"
           fill="outline"
           routerLink="/opcoes/paciente"
-          style="margin-top: 16px"
           >Editar dados do paciente</ion-button
         >}
       </section>
 
-      <section class="content-card profile-section">
+      <section class="content-card profile-section action-stack">
         <ion-button expand="block" fill="outline" (click)="sair()">Sair da conta</ion-button
         ><button
           class="delete-button"
-          style="width: 100%; margin-top: 16px"
           type="button"
           (click)="confirmando.set(true)"
         >

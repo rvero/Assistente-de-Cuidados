@@ -528,3 +528,106 @@ ion-radio:focus-visible {
 .auth-brand .header-title-row > h1 {
   margin: 0;
 }
+
+/* Espaçamento e alvos de toque compartilhados pelas telas mobile. */
+ion-button::part(native) {
+  min-height: 48px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  white-space: normal;
+  line-height: 1.35;
+}
+.page-body {
+  overflow-wrap: anywhere;
+}
+.page-body > ion-button {
+  margin-bottom: 16px;
+}
+.page-body ion-button:where([expand='block']) + ion-button:where([expand='block']) {
+  margin-top: 16px;
+}
+.action-stack {
+  display: grid;
+  gap: 16px;
+}
+.page-body .action-stack > ion-button,
+.page-body .action-stack > button {
+  width: 100%;
+  margin: 0;
+}
+.content-card > h2 + p,
+.content-card > p + p {
+  margin-top: 8px;
+}
+.content-card > h2,
+.content-card > h3,
+.content-card > p,
+.content-card > a {
+  overflow-wrap: anywhere;
+}
+.content-card > a:not(.contact-notification):not(.carer-card) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.date-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 16px 0 0;
+  list-style: none;
+}
+.date-list li {
+  padding: 8px 12px;
+  border: 1px solid #d5e1dd;
+  border-radius: 10px;
+  background: #f2f6f5;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.contract-status {
+  display: inline-block;
+  max-width: 100%;
+  margin: 12px 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #edf1f0;
+  color: #415650;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.contract-status[data-status='PENDENTE'] {
+  background: #fff2d7;
+  color: #765017;
+}
+.contract-status[data-status='ACEITO'],
+.contract-status[data-status='CONCLUIDO'] {
+  background: #e4f2ec;
+  color: #245f54;
+}
+.contract-status[data-status='RECUSADO'] {
+  background: #fff0f0;
+  color: #9a3535;
+}
+@media (max-width: 359px) {
+  .app-shell .content-card {
+    padding: 16px;
+  }
+  .app-shell.directory-screen .directory-header {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+.carer-list > .content-card {
+  margin-bottom: 0;
+}
+.delete-button:disabled,
+.cancel-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

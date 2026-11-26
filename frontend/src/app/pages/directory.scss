@@ -255,7 +255,7 @@ dd {
   color: #1f2a2e;
   border-radius: 20px;
   padding: 24px;
-  width: 100%;
+  width: min(calc(100% - 32px), 400px);
   max-width: 400px;
 }
 .confirm-dialog p {

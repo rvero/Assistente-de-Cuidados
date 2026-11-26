@@ -13,9 +13,9 @@ import { accountError } from '../../services/account-error';
  @if(carregando()){<p role="status">Carregando histórico…</p>}@else if(erro()){<p class="notice notice-error" role="alert">{{erro()}}</p><ion-button fill="outline" (click)="carregar()">Tentar novamente</ion-button>}
  @else{<div class="carer-list">@for(c of itens();track c.id){<article class="content-card">
  <h2>{{cuidador()?c.familia:c.cuidador}}</h2>@if(admin){<p>Família: {{c.familia}}</p>}
- <span class="profile-label">{{estados[c.status]}}</span>
+ <span class="contract-status" [attr.data-status]="c.status">{{estados[c.status]}}</span>
  @if(c.legado){<p>Registro anterior</p>}@else{<p>{{c.criadoEm|date:'dd/MM/yyyy'}}</p>}
- <ul>@for(data of c.datas;track data){<li>{{data|date:'dd/MM/yyyy':'UTC'}}</li>}</ul>
+ <ul class="date-list">@for(data of c.datas;track data){<li>{{data|date:'dd/MM/yyyy':'UTC'}}</li>}</ul>
  @if(cuidador() && (c.status==='PENDENTE'||c.status==='ACEITO')){<a [routerLink]="['/solicitacoes',c.id]">Ver pedido →</a>}
  </article>}@empty{<section class="content-card empty-state"><h2>Nenhuma contratação</h2></section>}</div>}
  </div></main></ion-content>`})
