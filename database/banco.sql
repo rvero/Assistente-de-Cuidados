@@ -78,3 +78,34 @@ CREATE TABLE IF NOT EXISTS agendamentos (
     CONSTRAINT fk_agendamento_cliente FOREIGN KEY (cliente_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fk_agendamento_cuidador FOREIGN KEY (cuidador_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS contratacoes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id BIGINT,
+    cuidador_id BIGINT,
+    familia VARCHAR(255),
+    cuidador VARCHAR(255),
+    cidade VARCHAR(100),
+    valor_hora DECIMAL(10,2),
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
+    criado_em TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    aceito_em TIMESTAMP(6) NULL,
+    encerrado_em TIMESTAMP(6) NULL,
+    legado BOOLEAN NOT NULL DEFAULT FALSE,
+    paciente_nome VARCHAR(255),
+    finalidade VARCHAR(255),
+    alergias TEXT,
+    orientacoes TEXT,
+    INDEX idx_contrato_cliente (cliente_id, status),
+    INDEX idx_contrato_cuidador (cuidador_id, status)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS contratacao_datas (
+    contratacao_id BIGINT NOT NULL,
+    data_servico DATE NOT NULL,
+    PRIMARY KEY (contratacao_id, data_servico),
+    CONSTRAINT fk_datas_contrato FOREIGN KEY (contratacao_id) REFERENCES contratacoes(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+ALTER TABLE agendamentos ADD COLUMN contratacao_id BIGINT NULL;
+CREATE INDEX idx_reserva_contrato ON agendamentos (contratacao_id);

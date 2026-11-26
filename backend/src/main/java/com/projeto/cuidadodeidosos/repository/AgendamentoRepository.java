@@ -16,6 +16,8 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
     @Query("delete from Agendamento a where a.clienteId = :id or a.cuidadorId = :id")
     void deleteForUser(@Param("id") Long id);
 
+    void deleteByContratacaoId(Long contratacaoId);
+
     boolean existsByCuidadorIdAndData(Long cuidadorId, LocalDate data);
 
     List<Agendamento> findByClienteIdOrderByDataAsc(Long clienteId);

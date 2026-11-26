@@ -11,12 +11,14 @@ import java.util.*;
 @Transactional(readOnly = true)
 public class DirectoryService {
     private final UserRepository users;
+    private final ContratacaoService contratacoes;
     private final CuidadorProfileRepository carers;
     private final FamiliaProfileRepository families;
     private final ContatoRepository contacts;
     private final AgendamentoRepository agendamentos;
     private final DisponibilidadeCuidadorRepository disponibilidades;
-    public DirectoryService(UserRepository users, CuidadorProfileRepository carers, FamiliaProfileRepository families, ContatoRepository contacts, AgendamentoRepository agendamentos, DisponibilidadeCuidadorRepository disponibilidades) {
+    public DirectoryService(UserRepository users, CuidadorProfileRepository carers, FamiliaProfileRepository families, ContatoRepository contacts, AgendamentoRepository agendamentos, DisponibilidadeCuidadorRepository disponibilidades, ContratacaoService contratacoes) {
+        this.contratacoes=contratacoes;
         this.users = users; this.carers = carers; this.families = families; this.contacts = contacts; this.agendamentos = agendamentos; this.disponibilidades = disponibilidades;
     }
     public record PublicCarer(Long id, String nome, String descricao, String curriculoUrl, boolean perfilCompleto, String cidade, java.math.BigDecimal valorHora) {}
@@ -43,8 +45,9 @@ public class DirectoryService {
     }
     @Transactional
     public void delete(Long id) {
-        User user = users.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada."));
+        User user = users.bloquear(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada."));
         if ("ADMIN".equals(user.getRole())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A conta de administração não pode ser excluída.");
+        contratacoes.removerConta(id);
         agendamentos.deleteForUser(id);
         disponibilidades.deleteByCuidadorId(id);
         disponibilidades.flush();

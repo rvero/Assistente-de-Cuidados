@@ -1,4 +1,3 @@
-import { BookingComponent } from '../../components/booking';
 import { CurrencyPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -11,29 +10,12 @@ import { DirectoryApi, type CuidadorPublico } from '../../services/directory-api
 
 @Component({
   selector: 'app-cuidador-publico',
-  imports: [BookingComponent, CurrencyPipe, RouterLink, IonContent, IonButton],
+  imports: [ CurrencyPipe, RouterLink, IonContent, IonButton],
   templateUrl: './cuidador-publico.page.html',
   styleUrls: ['../directory.scss'],
 })
 export class CuidadorPublicoPage {
   readonly auth = inject(Auth);
-  readonly contatoEmail = signal('');
-  readonly enviando = signal(false);
-  readonly erroContato = signal('');
-  async contatar(): Promise<void> {
-    const carer = this.cuidador();
-    if (!carer || this.enviando()) return;
-    this.enviando.set(true);
-    this.erroContato.set('');
-    try {
-      const data = await firstValueFrom(this.api.contatar(carer.id));
-      this.contatoEmail.set(data.email);
-    } catch (e) {
-      this.erroContato.set(authError(e, 'perfil'));
-    } finally {
-      this.enviando.set(false);
-    }
-  }
   private readonly route = inject(ActivatedRoute);
   private readonly api = inject(DirectoryApi);
   readonly cuidador = signal<CuidadorPublico | null>(null);
@@ -43,8 +25,6 @@ export class CuidadorPublicoPage {
     void this.carregar();
   }
   async carregar(): Promise<void> {
-    this.contatoEmail.set('');
-    this.erroContato.set('');
     this.cuidador.set(null);
     this.erro.set('');
     this.carregando.set(true);

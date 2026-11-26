@@ -20,9 +20,6 @@ export class AgendaApi {
   calendario(id: number, inicio: string, fim: string) {
     return this.http.get<Calendario>(`${environment.apiUrl}/cuidadores/${id}/agenda`, { params: { inicio, fim } });
   }
-  agendar(cuidadorId: number, datas: string[]) {
-    return this.http.post<Agendamento[]>(environment.apiUrl + '/cliente/agendamentos/lote', { cuidadorId, datas });
-  }
   listar(cuidador: boolean) {
     return this.http.get<Agendamento[]>(environment.apiUrl + (cuidador ? '/cuidador' : '/cliente') + '/agendamentos');
   }

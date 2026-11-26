@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
+import { ContratoApi } from '../services/contrato-api';
 import { Auth } from '../services/auth';
 
 @Component({
@@ -14,18 +15,18 @@ import { Auth } from '../services/auth';
       ><span>Histórico</span></a
     >
     @if (auth.usuario()?.role === 'CLIENTE') {
-      <a class="activity" routerLink="/busca" routerLinkActive="selected" ariaCurrentWhenActive="page"
+      <a class="activity" [routerLink]="contratos.atual()?'/contrato':'/busca'" routerLinkActive="selected" ariaCurrentWhenActive="page"
         ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-          <circle cx="10.5" cy="10.5" r="6.5" />
-          <path d="m16 16 5 5" /></svg
-        ><span>Buscar</span></a
+          @if(contratos.atual()){<path d="M6 3h9l4 4v14H6V3ZM14 3v5h5M9 12h7M9 16h7"/>}
+          @else{<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>}</svg
+        ><span>{{contratos.atual()?'Contrato atual':'Buscar'}}</span></a
       >
     } @else {
       <a class="activity" routerLink="/home-cuidador" routerLinkActive="selected" ariaCurrentWhenActive="page"
         ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
           <circle cx="9" cy="8" r="3" />
           <path d="M3 21v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 5" /></svg
-        ><span>Contatos</span></a
+        ><span>Solicitações</span></a
       >
     }
     <a class="options" routerLink="/opcoes" routerLinkActive="selected" ariaCurrentWhenActive="page"
@@ -92,4 +93,5 @@ import { Auth } from '../services/auth';
 })
 export class MemberNavComponent {
   readonly auth = inject(Auth);
+  readonly contratos = inject(ContratoApi);
 }

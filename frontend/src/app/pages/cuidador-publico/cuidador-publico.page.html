@@ -37,22 +37,9 @@
         >Consultar currículo ↗</a
       >} @if(!c.perfilCompleto){
       <p class="field-note">Perfil incompleto.</p>
-      }} @if(cuidador(); as profissional){ @if(auth.usuario()?.role==='CLIENTE'){<app-booking [cuidadorId]="profissional.id" />} } @if(cuidador() && auth.usuario()?.role==='CLIENTE'){
-      <section class="content-card profile-section">
-        <h2>Solicitar contato</h2>
-        <p>Compartilha seu nome, e-mail e dados do paciente com o cuidador.</p>
-        @if(contatoEmail()){
-        <p class="notice notice-success" role="status">
-          Contato solicitado.
-        </p>
-        <a class="curriculum-link" [href]="'mailto:'+contatoEmail()">Escrever para {{contatoEmail()}} ↗</a>}
-        @else{<ion-button expand="block" (click)="contatar()" [disabled]="enviando()"
-          >{{enviando()?'Registrando…':'Solicitar contato'}}</ion-button
-        >} @if(erroContato()){
-        <p class="notice notice-error" role="alert">{{erroContato()}}</p>
-        }
-      </section>
-      }
+      }}
+      @if(cuidador(); as profissional){ @if(auth.usuario()?.role==='CLIENTE'){
+      <ion-button expand="block" [routerLink]="['/contratar',profissional.id]">Contratar</ion-button>
+      }}
     </div>
-  </main></ion-content
->
+  </main></ion-content>

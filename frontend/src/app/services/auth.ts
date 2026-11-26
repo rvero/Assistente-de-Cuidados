@@ -15,7 +15,7 @@ export class Auth {
   private restoration?: Promise<void>;
   get home(): string {
     if (this.usuario()?.role === 'ADMIN') return '/admin';
-    return this.usuario()?.role === 'CUIDADOR' ? '/home-cuidador' : '/busca';
+    return this.usuario()?.role === 'CUIDADOR' ? '/home-cuidador' : '/contrato';
   }
   private validate(user: Usuario): void {
     if (!user || !user.nome || !user.email || !['CLIENTE', 'CUIDADOR', 'ADMIN'].includes(user.role))

@@ -14,9 +14,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class AgendaController {
 
     private final AgendaService service;
+    private final com.projeto.cuidadodeidosos.service.ContratacaoService contratos;
 
-    public AgendaController(AgendaService service) {
+    public AgendaController(AgendaService service, com.projeto.cuidadodeidosos.service.ContratacaoService contratos) {
         this.service = service;
+        this.contratos = contratos;
     }
 
     // Cuidador escolhe os dias em que atende
@@ -41,6 +43,7 @@ public class AgendaController {
     public AgendaService.CalendarioData calendario(@PathVariable("id") Long id,
             @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
             @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+        contratos.limparVencidos(id);
         return service.calendario(id, inicio, fim);
     }
 
@@ -48,7 +51,7 @@ public class AgendaController {
     @ResponseStatus(HttpStatus.CREATED)
     public List<AgendaService.AgendamentoItem> agendarDatas(Authentication auth,
             @Valid @RequestBody AgendaService.AgendamentosRequest request) {
-        return service.agendarDatas(auth.getName(), request);
+        throw new org.springframework.web.server.ResponseStatusException(HttpStatus.GONE, "Use a contratação para reservar datas.");
     }
 
     // Cliente marca um dia
@@ -56,12 +59,12 @@ public class AgendaController {
     @ResponseStatus(HttpStatus.CREATED)
     public AgendaService.AgendamentoItem agendar(
             Authentication auth, @Valid @RequestBody AgendaService.AgendamentoRequest request) {
-        return service.agendar(auth.getName(), request);
+        throw new org.springframework.web.server.ResponseStatusException(HttpStatus.GONE, "Use a contratação para reservar datas.");
     }
 
     @GetMapping({"/cliente/agendamentos", "/api/cliente/agendamentos"})
     public List<AgendaService.AgendamentoItem> meusAgendamentos(Authentication auth) {
-        return service.agendamentosDoCliente(auth.getName());
+        throw new org.springframework.web.server.ResponseStatusException(HttpStatus.GONE, "Consulte seus contratos.");
     }
 
     // Cuidador vê os serviços marcados

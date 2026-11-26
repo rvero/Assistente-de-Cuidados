@@ -12,6 +12,9 @@ public class Agendamento {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="contratacao_id") private Long contratacaoId;
+    public void setContratacaoId(Long id) { contratacaoId=id; }
+
     @Column(name = "cliente_id", nullable = false)
     private Long clienteId;
 

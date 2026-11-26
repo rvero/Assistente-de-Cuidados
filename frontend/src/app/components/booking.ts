@@ -1,13 +1,16 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { ContratoApi } from '../services/contrato-api';
+import { Auth } from '../services/auth';
 import { DatePipe } from '@angular/common';
 import { IonButton } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 import { AgendaApi, DIAS, dataLocal, type Calendario } from '../services/agenda-api';
 import { accountError } from '../services/account-error';
 @Component({
-  selector: 'app-booking', imports: [IonButton, DatePipe],
+  selector: 'app-booking', imports: [IonButton, DatePipe, RouterLink],
   template: `<section class="content-card profile-section">
-    <h2>Agendar cuidado</h2>
+    <h2>Selecione os dias</h2>
     @if (sucesso()) { <p class="notice notice-success" role="status">{{sucesso()}}</p> }
     @if (erro()) { <p class="notice notice-error" role="alert">{{erro()}}</p><ion-button fill="outline" (click)="carregar()" [disabled]="enviando()">Atualizar datas</ion-button> }
     <div class="month-nav"><button type="button" aria-label="Mês anterior" (click)="mudarMes(-1)" [disabled]="primeiroMes() || carregando() || enviando()">‹</button>
@@ -27,7 +30,9 @@ import { accountError } from '../services/account-error';
         @for(data of selecionadas(); track data) { <button type="button" (click)="alternar(data)" [disabled]="enviando()" [attr.aria-label]="'Remover '+data">{{data | date:'dd/MM/yyyy':'UTC'}} ×</button> }
       </div>
     }
-    <ion-button expand="block" (click)="confirmar()" [disabled]="!selecionadas().length || carregando() || enviando() || !!erro()">{{enviando() ? 'Agendando…' : 'Confirmar datas'}}</ion-button>
+    <p class="legend">Ao continuar, os dados do paciente serão compartilhados com este cuidador.</p>
+    <a routerLink="/opcoes/paciente">Editar dados do paciente</a>
+    <ion-button expand="block" (click)="confirmar()" [disabled]="!selecionadas().length || carregando() || enviando() || !!erro()">{{enviando() ? 'Enviando…' : 'Continuar'}}</ion-button>
   </section>`,
   styles: [`
     :host { display:block; } h2 {font-size:18px;} h3 {font-size:16px;} .month-nav {display:flex;align-items:center;justify-content:space-between;gap:8px;}
@@ -44,6 +49,9 @@ import { accountError } from '../services/account-error';
 export class BookingComponent implements OnInit {
   readonly cuidadorId = input.required<number>();
   private readonly api = inject(AgendaApi);
+  private readonly contratos = inject(ContratoApi);
+  private readonly auth = inject(Auth);
+  private readonly router = inject(Router);
   readonly semana = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
   readonly mes = signal(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   readonly dados = signal<Calendario>({dias:[], datasOcupadas:[]});
@@ -87,8 +95,12 @@ export class BookingComponent implements OnInit {
     if(!this.selecionadas().length || this.enviando() || this.carregando() || this.erro()) return;
     this.enviando.set(true);this.sucesso.set('');
     try {
-      const itens=await firstValueFrom(this.api.agendar(this.cuidadorId(),this.selecionadas()));
-      this.selecionadas.set([]);this.sucesso.set(itens.length===1?'Data agendada.':'Datas agendadas.');await this.carregar();
+      const token=this.auth.token;
+      const contrato=await firstValueFrom(this.contratos.solicitar(this.cuidadorId(),this.selecionadas()));
+      if(token!==this.auth.token)return;
+      this.contratos.atual.set(contrato);
+      this.selecionadas.set([]);
+      await this.router.navigateByUrl('/contrato',{replaceUrl:true});
     } catch(e) { await this.carregar();this.erro.set(accountError(e)); }
     finally { this.enviando.set(false); }
   }

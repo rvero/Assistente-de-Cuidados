@@ -48,7 +48,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./pages/historico/historico.page').then((m) => m.HistoricoPage),
   },
-  { path: 'agenda', canActivate: [authGuard], loadComponent: () => import('./pages/agenda/agenda.page').then(m => m.AgendaPage) },
+  { path: 'agenda', canActivate: [authGuard], data: { tipo: 'CUIDADOR' }, loadComponent: () => import('./pages/agenda/agenda.page').then(m => m.AgendaPage) },
   { path: 'contatos', redirectTo: 'home-cuidador', pathMatch: 'full' },
   {
     path: 'opcoes',
@@ -72,5 +72,9 @@ export const routes: Routes = [
     data: { tipo: 'CUIDADOR' },
     loadComponent: () => import('./pages/paciente/paciente.page').then((m) => m.PacientePage),
   },
+  { path: 'contrato', canActivate: [authGuard], data: { tipo: 'CLIENTE' }, loadComponent: () => import('./pages/contrato/contrato.page').then(m => m.ContratoPage) },
+  { path: 'contratar/:id', canActivate: [authGuard], data: { tipo: 'CLIENTE' }, loadComponent: () => import('./pages/contratar/contratar.page').then(m => m.ContratarPage) },
+  { path: 'solicitacoes/:id', canActivate: [authGuard], data: { tipo: 'CUIDADOR' }, loadComponent: () => import('./pages/solicitacao/solicitacao.page').then(m => m.SolicitacaoPage) },
+  { path: 'admin/contratos', canActivate: [authGuard], data: { tipo: 'ADMIN', admin: true }, loadComponent: () => import('./pages/historico/historico.page').then(m => m.HistoricoPage) },
   { path: '**', redirectTo: 'inicio' },
 ];

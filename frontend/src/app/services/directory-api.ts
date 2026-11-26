@@ -34,9 +34,6 @@ export class DirectoryApi {
   cuidador(id: string): Observable<CuidadorPublico> {
     return this.http.get<CuidadorPublico>(environment.apiUrl + '/cuidadores/' + encodeURIComponent(id));
   }
-  contatar(id: number): Observable<{ email: string }> {
-    return this.http.post<{ email: string }>(environment.apiUrl + '/cuidadores/' + id + '/contato', {});
-  }
   contas(): Observable<ContaAdmin[]> {
     return this.http.get<ContaAdmin[]>(environment.apiUrl + '/admin/contas');
   }
