@@ -25,6 +25,10 @@ export class ContratoApi {
   private readonly destroyRef=inject(DestroyRef);
   readonly atual=signal<Contrato|null>(null);
   private version=0;
+  definirAtual(c: Contrato|null): void {
+    this.atual.set(c);
+    this.auth.definirContratoAtivo(!!c && ['PENDENTE','ACEITO'].includes(c.status));
+  }
   constructor(){
     effect(()=>{
       const user=this.auth.usuario(); this.version++; this.atual.set(null);
@@ -37,7 +41,7 @@ export class ContratoApi {
   async atualizarAtual():Promise<Contrato|null>{
     const version=++this.version;const token=this.auth.token;
     const c=await firstValueFrom(this.http.get<Contrato|null>(environment.apiUrl+'/cliente/contratos/atual'));
-    if(version===this.version && token===this.auth.token) this.atual.set(c);
+    if(version===this.version && token===this.auth.token) this.definirAtual(c);
     return c;
   }
   solicitar(cuidadorId:number,datas:string[]){return this.http.post<Contrato>(environment.apiUrl+'/cliente/contratos',{cuidadorId,datas});}

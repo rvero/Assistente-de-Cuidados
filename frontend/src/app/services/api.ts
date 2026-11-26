@@ -30,6 +30,9 @@ export class Api {
   cadastrar(dados: Cadastro): Observable<object> {
     return this.http.post(environment.apiUrl + '/auth/register', dados);
   }
+  obterContratoAtual(): Observable<{ status: string } | null> {
+    return this.http.get<{ status: string } | null>(environment.apiUrl + '/cliente/contratos/atual');
+  }
   obterUsuario(): Observable<Usuario> {
     return this.http.get<Usuario>(environment.apiUrl + '/users/me');
   }

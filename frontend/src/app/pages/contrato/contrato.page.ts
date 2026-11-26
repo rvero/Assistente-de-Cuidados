@@ -44,7 +44,7 @@ export class ContratoPage {
     const c=this.contrato();if(!c||this.ocupado())return;
     const version=this.version;const token=this.auth.token;this.ocupado.set(true);this.erro.set('');
     try{await firstValueFrom(this.api.cancelar(c.id));if(version!==this.version||token!==this.auth.token)return;
-      this.api.atual.set(null);await this.router.navigateByUrl('/busca',{replaceUrl:true});
+      this.api.definirAtual(null);await this.router.navigateByUrl('/busca',{replaceUrl:true});
     }catch(e){if(version===this.version&&token===this.auth.token)this.erro.set(accountError(e));}
     finally{if(version===this.version&&token===this.auth.token)this.ocupado.set(false);}
   }

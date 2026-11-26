@@ -98,7 +98,7 @@ export class BookingComponent implements OnInit {
       const token=this.auth.token;
       const contrato=await firstValueFrom(this.contratos.solicitar(this.cuidadorId(),this.selecionadas()));
       if(token!==this.auth.token)return;
-      this.contratos.atual.set(contrato);
+      this.contratos.definirAtual(contrato);
       this.selecionadas.set([]);
       await this.router.navigateByUrl('/contrato',{replaceUrl:true});
     } catch(e) { await this.carregar();this.erro.set(accountError(e)); }
