@@ -12,6 +12,9 @@ export interface FamiliaPerfil {
   recomendacoes: string;
 }
 export interface CuidadorPerfil {
+  fotoUrl?: string | null;
+  instagramUrl?: string | null;
+  tiktokUrl?: string | null;
   cidade?: string | null;
   valorHora?: number | null;
   nomeCuidador: string;
@@ -24,6 +27,11 @@ export interface CuidadorPerfil {
 @Injectable({ providedIn: 'root' })
 export class ProfileApi {
   private readonly http = inject(HttpClient);
+  enviarFoto(file: File): Observable<{fotoUrl: string}> {
+    const data = new FormData();
+    data.append('foto', file);
+    return this.http.post<{fotoUrl: string}>(environment.apiUrl + '/cuidador/foto', data);
+  }
   obterFamilia(): Observable<FamiliaPerfil | null> {
     return this.http.get<FamiliaPerfil | null>(environment.apiUrl + '/cliente/perfil');
   }

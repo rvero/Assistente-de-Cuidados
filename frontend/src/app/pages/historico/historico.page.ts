@@ -1,3 +1,4 @@
+import { AppIcon } from '../../components/app-icon';
 import { Component, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -6,9 +7,9 @@ import { firstValueFrom } from 'rxjs';
 import { Auth } from '../../services/auth';
 import { ContratoApi, ESTADOS, type Contrato } from '../../services/contrato-api';
 import { accountError } from '../../services/account-error';
-@Component({selector:'app-historico',imports:[DatePipe,RouterLink,IonContent,IonButton],styleUrls:['../directory.scss'],
+@Component({selector:'app-historico',imports: [AppIcon, DatePipe,RouterLink,IonContent,IonButton],styleUrls:['../directory.scss'],
  template:`<ion-content><main class="app-shell directory-screen"><header class="directory-header"><div class="header-title-row">
- @if(admin){<a routerLink="/admin" class="back-arrow" aria-label="Voltar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5m7-7-7 7 7 7"/></svg></a>}
+ @if(admin){<a routerLink="/admin" class="back-arrow" aria-label="Voltar"><app-icon name="back" /></a>}
  <h1>Histórico de contratações</h1></div></header><div class="page-body">
  @if(carregando()){<p role="status">Carregando histórico…</p>}@else if(erro()){<p class="notice notice-error" role="alert">{{erro()}}</p><ion-button fill="outline" (click)="carregar()">Tentar novamente</ion-button>}
  @else{<div class="carer-list">@for(c of itens();track c.id){<article class="content-card">
@@ -16,7 +17,7 @@ import { accountError } from '../../services/account-error';
  <span class="contract-status" [attr.data-status]="c.status">{{estados[c.status]}}</span>
  @if(c.legado){<p>Registro anterior</p>}@else{<p>{{c.criadoEm|date:'dd/MM/yyyy'}}</p>}
  <ul class="date-list">@for(data of c.datas;track data){<li>{{data|date:'dd/MM/yyyy':'UTC'}}</li>}</ul>
- @if(cuidador() && (c.status==='PENDENTE'||c.status==='ACEITO')){<a [routerLink]="['/solicitacoes',c.id]">Ver pedido →</a>}
+ @if(cuidador() && (c.status==='PENDENTE'||c.status==='ACEITO')){<a [routerLink]="['/solicitacoes',c.id]">Ver pedido <app-icon name="forward" /></a>}
  </article>}@empty{<section class="content-card empty-state"><h2>Nenhuma contratação</h2></section>}</div>}
  </div></main></ion-content>`})
 export class HistoricoPage {

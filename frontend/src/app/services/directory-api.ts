@@ -8,6 +8,9 @@ import type { Papel } from './api';
 import type { CuidadorPerfil, FamiliaPerfil } from './profile-api';
 
 export interface CuidadorPublico {
+  fotoUrl?: string | null;
+  instagramUrl?: string | null;
+  tiktokUrl?: string | null;
   cidade?: string | null;
   valorHora?: number | null;
   id: number;

@@ -1,0 +1,36 @@
+.profile-photo {
+  width: 112px;
+  height: 112px;
+  border: 4px solid #e2eeea;
+  overflow: hidden;
+}
+.profile-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0 24px;
+}
+.profile-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bold;
+}
+.profile-link app-icon { width: 18px; height: 18px; }
+.instagram { background: linear-gradient(120deg, #833ab4, #bc2458); }
+.tiktok { background: #161823; box-shadow: inset 0 -3px #25f4ee; }
+.curriculum { background: #2f7d6e; }
+.profile-link:focus-visible { outline: 2px solid #6c63a8; outline-offset: 3px; }

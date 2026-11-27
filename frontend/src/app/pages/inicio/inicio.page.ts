@@ -1,3 +1,4 @@
+import { AppIcon } from '../../components/app-icon';
 import { Component, signal, type OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular';
@@ -6,7 +7,7 @@ import { IonContent } from '@ionic/angular';
   selector: 'app-inicio',
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
-  imports: [IonContent, RouterLink],
+  imports: [AppIcon, IonContent, RouterLink],
 })
 export class InicioPage implements OnDestroy {
   readonly slides = [

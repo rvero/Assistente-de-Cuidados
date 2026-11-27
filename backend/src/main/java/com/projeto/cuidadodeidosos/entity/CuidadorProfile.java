@@ -21,6 +21,18 @@ public class CuidadorProfile {
     private String descricao;
     @Column(name = "curriculo_url", length = 500)
     private String curriculoUrl;
+    @Column(name = "foto_url", length = 500)
+    private String fotoUrl;
+    @Column(name = "instagram_url", length = 500)
+    private String instagramUrl;
+    @Column(name = "tiktok_url", length = 500)
+    private String tiktokUrl;
+    public String getFotoUrl() { return fotoUrl; }
+    public void setFotoUrl(String value) { fotoUrl = value; }
+    public String getInstagramUrl() { return instagramUrl; }
+    public void setInstagramUrl(String value) { instagramUrl = value; }
+    public String getTiktokUrl() { return tiktokUrl; }
+    public void setTiktokUrl(String value) { tiktokUrl = value; }
     @Column(length = 100)
     private String cidade;
     @Column(name = "valor_hora", precision = 10, scale = 2)

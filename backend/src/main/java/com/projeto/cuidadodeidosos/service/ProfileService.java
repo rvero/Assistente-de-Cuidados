@@ -8,10 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 @Service
 public class ProfileService {
+    private final PhotoService photos;
     private final UserRepository users;
     private final FamiliaProfileRepository familias;
     private final CuidadorProfileRepository cuidadores;
-    public ProfileService(UserRepository users, FamiliaProfileRepository familias, CuidadorProfileRepository cuidadores) {
+    public ProfileService(UserRepository users, FamiliaProfileRepository familias, CuidadorProfileRepository cuidadores, PhotoService photos) {
+        this.photos = photos;
         this.users = users; this.familias = familias; this.cuidadores = cuidadores;
     }
     private User owner(String email, String role) {
@@ -23,7 +25,7 @@ public class ProfileService {
         return new FamiliaProfileData(p.getNomePaciente(), p.getDataNascimento(), p.getFinalidade(), p.getAlergias(), p.getRecomendacoes());
     }
     private CuidadorProfileData data(CuidadorProfile p) {
-        return new CuidadorProfileData(p.getNomeCuidador(), p.getNomeSocial(), p.getGenero(), p.getDataNascimento(), p.getDescricao(), p.getCurriculoUrl(), p.getCidade(), p.getValorHora());
+        return new CuidadorProfileData(p.getNomeCuidador(), p.getNomeSocial(), p.getGenero(), p.getDataNascimento(), p.getDescricao(), p.getCurriculoUrl(), p.getCidade(), p.getValorHora(), p.getFotoUrl(), p.getInstagramUrl(), p.getTiktokUrl());
     }
     private PatientData patientData(FamiliaProfile p) { return new PatientData(p.getNomePaciente(),p.getFinalidade(),p.getAlergias(),p.getRecomendacoes()); }
     @Transactional(readOnly=true)
@@ -59,6 +61,10 @@ public class ProfileService {
         p.setUser(user); p.setNomeCuidador(d.nomeCuidador().trim()); p.setNomeSocial(d.nomeSocial());
         p.setGenero(d.genero()); p.setDataNascimento(d.dataNascimento()); p.setDescricao(d.descricao());
         p.setCurriculoUrl(d.curriculoUrl());
+        photos.validarUrl(d.fotoUrl(), user.getId());
+        if (!java.util.Objects.equals(p.getFotoUrl(), d.fotoUrl())) photos.excluirAposCommit(p.getFotoUrl(), user.getId());
+        p.setFotoUrl(d.fotoUrl() == null || d.fotoUrl().isBlank() ? null : d.fotoUrl());
+        p.setInstagramUrl(d.instagramUrl()); p.setTiktokUrl(d.tiktokUrl());
         p.setCidade(d.cidade() == null || d.cidade().isBlank() ? null : d.cidade().trim()); p.setValorHora(d.valorHora());
         return data(cuidadores.save(p));
     }

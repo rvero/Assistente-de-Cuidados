@@ -1,3 +1,4 @@
+import { AppIcon } from '../../components/app-icon';
 import { Component, computed, inject, signal, effect, viewChild } from '@angular/core';
 import { FormsModule, type NgForm } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -12,7 +13,7 @@ import { ProfileApi, type CuidadorPerfil } from '../../services/profile-api';
 
 @Component({
   selector: 'app-conta',
-  imports: [FormsModule, RouterLink, IonContent, IonButton, IonInput, IonSelect, IonSelectOption, IonTextarea],
+  imports: [AppIcon, FormsModule, RouterLink, IonContent, IonButton, IonInput, IonSelect, IonSelectOption, IonTextarea],
   templateUrl: './conta.page.html',
   styleUrls: ['../directory.scss', './conta.page.scss'],
 })
@@ -45,6 +46,8 @@ export class ContaPage {
   novaSenha = '';
   readonly carregando = signal(true);
   readonly salvando = signal(false);
+  readonly enviandoFoto = signal(false);
+  readonly fotoFalhou = signal(false);
   readonly erro = signal('');
   readonly sucesso = signal('');
   readonly falhaCarga = signal(false);
@@ -62,6 +65,7 @@ export class ContaPage {
   async carregar(): Promise<void> {
     const version = ++this.version;
     this.carregando.set(true);
+    this.fotoFalhou.set(false);
     this.falhaCarga.set(false);
     this.erro.set('');
     this.sucesso.set('');
@@ -93,8 +97,30 @@ export class ContaPage {
       if (version === this.version) this.carregando.set(false);
     }
   }
+  async enviarFoto(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file || this.enviandoFoto() || this.salvando()) return;
+    this.erro.set(''); this.sucesso.set('');
+    if (!['image/jpeg', 'image/png'].includes(file.type) || file.size > 2 * 1024 * 1024) {
+      this.erro.set('Escolha uma imagem JPG ou PNG de até 2 MB.'); return;
+    }
+    const version = this.version, token = this.auth.token;
+    this.enviandoFoto.set(true);
+    try {
+      const data = await firstValueFrom(this.profiles.enviarFoto(file));
+      if (version !== this.version || token !== this.auth.token) return;
+      this.cuidador.fotoUrl = data.fotoUrl; this.fotoFalhou.set(false);
+    } catch (e) {
+      if (version === this.version && token === this.auth.token) {
+        const message = (e as {error?: {message?: string}})?.error?.message;
+        this.erro.set(message || 'Não foi possível enviar a foto. Tente novamente.');
+      }
+    } finally { this.enviandoFoto.set(false); }
+  }
   async salvar(form: NgForm): Promise<void> {
-    if (this.salvando() || this.carregando() || this.falhaCarga()) return;
+    if (this.salvando() || this.enviandoFoto() || this.carregando() || this.falhaCarga()) return;
     this.erro.set('');
     this.sucesso.set('');
     if (form.invalid || !this.nome.trim()) {
@@ -124,6 +150,8 @@ export class ContaPage {
               nomeCuidador: this.cuidador.nomeCuidador.trim(),
               nomeSocial: '',
               curriculoUrl: this.cuidador.curriculoUrl?.trim() ?? '',
+              instagramUrl: this.cuidador.instagramUrl?.trim() ?? '',
+              tiktokUrl: this.cuidador.tiktokUrl?.trim() ?? '',
               cidade: this.cuidador.cidade?.trim() || null,
               valorHora:
                 this.cuidador.valorHora == null || String(this.cuidador.valorHora) === ''

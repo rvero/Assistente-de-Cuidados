@@ -1,0 +1,3 @@
+import { Component, input, signal, effect } from '@angular/core';
+@Component({selector:'app-profile-avatar', template:`@if(url() && !failed()){<img [src]="url()" alt="" (error)="failed.set(true)" />}@else{ {{name().charAt(0).toUpperCase()}} }`, host:{'aria-hidden':'true'}, styles:[`:host{display:grid;place-items:center;flex-shrink:0;width:56px;height:56px;border-radius:50%;overflow:hidden;background:#e8e5f2;color:#6c63a8;font-size:24px;font-weight:bold}img{width:100%;height:100%;object-fit:cover}`]})
+export class ProfileAvatar {readonly url=input<string|null|undefined>();readonly name=input.required<string>();readonly failed=signal(false);constructor(){effect(()=>{this.url();this.failed.set(false);});}}

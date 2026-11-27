@@ -9,8 +9,7 @@
         <div class="filter-fields">
           <label class="search-label" for="busca-cuidador">Nome</label>
           <div class="search-box">
-            <span aria-hidden="true">⌕</span
-            ><input
+            <app-icon name="search" /><input
               id="busca-cuidador"
               type="search"
               placeholder="Quem você procura?"
@@ -53,7 +52,7 @@
       <div class="carer-list">
         @for (cuidador of resultados(); track cuidador.id) {
         <a class="carer-card" [routerLink]="['/cuidadores',cuidador.id]"
-          ><span class="avatar" aria-hidden="true">{{cuidador.nome.charAt(0).toUpperCase()}}</span>
+          ><app-profile-avatar [url]="cuidador.fotoUrl" [name]="cuidador.nome" />
           <div class="card-copy">
             <span class="profile-label">Cuidador</span>
             <h2>{{cuidador.nome}}</h2>
@@ -63,7 +62,7 @@
               currency:'BRL':'symbol':'1.2-2':'pt-BR') + ' / hora' : 'Valor por hora não informado'}}
             </p>
             <p>{{cuidador.descricao || 'Este profissional ainda não adicionou uma apresentação.'}}</p>
-            <span class="view-profile">Ver perfil <span aria-hidden="true">→</span></span>
+            <span class="view-profile">Ver perfil <app-icon name="forward" /></span>
           </div></a
         >
         } @empty {

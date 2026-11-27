@@ -1,3 +1,4 @@
+import { AppIcon } from '../../components/app-icon';
 import { Component, inject, signal } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +12,7 @@ import { authError } from '../../services/auth-error';
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  imports: [FormsModule, RouterLink, IonButton, IonContent, IonInput],
+  imports: [AppIcon, FormsModule, RouterLink, IonButton, IonContent, IonInput],
 })
 export class LoginPage {
   private readonly router = inject(Router);

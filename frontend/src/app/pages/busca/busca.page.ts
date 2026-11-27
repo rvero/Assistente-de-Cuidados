@@ -1,3 +1,5 @@
+import { ProfileAvatar } from '../../components/profile-avatar';
+import { AppIcon } from '../../components/app-icon';
 import { CurrencyPipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +12,7 @@ import { DirectoryApi, type CuidadorPublico } from '../../services/directory-api
 
 @Component({
   selector: 'app-busca',
-  imports: [CurrencyPipe, FormsModule, RouterLink, IonContent, IonButton],
+  imports: [ProfileAvatar, AppIcon, CurrencyPipe, FormsModule, RouterLink, IonContent, IonButton],
   templateUrl: './busca.page.html',
   styleUrls: ['../directory.scss', './busca.page.scss'],
 })

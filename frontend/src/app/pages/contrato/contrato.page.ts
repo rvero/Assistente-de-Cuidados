@@ -1,3 +1,4 @@
+import { AppIcon } from '../../components/app-icon';
 import { Component, inject, signal } from '@angular/core';
 import { DatePipe, CurrencyPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -8,7 +9,7 @@ import { Auth } from '../../services/auth';
 import { iniciarAtualizacao } from '../../services/live-refresh';
 import { accountError } from '../../services/account-error';
 @Component({
-  selector:'app-contrato',imports:[DatePipe,CurrencyPipe,RouterLink,IonContent,IonButton],styleUrls:['../directory.scss'],
+  selector:'app-contrato',imports: [AppIcon, DatePipe,CurrencyPipe,RouterLink,IonContent,IonButton],styleUrls:['../directory.scss'],
   template:`<ion-content><main class="app-shell directory-screen"><header class="directory-header"><h1>Contrato atual</h1></header><div class="page-body">
     @if(erro()){<p class="notice notice-error" role="alert">{{erro()}}</p><ion-button fill="outline" (click)="carregar()" [disabled]="ocupado()">Tentar novamente</ion-button>}
     @if(carregando()){<p role="status">Carregando contrato…</p>}
@@ -18,7 +19,7 @@ import { accountError } from '../../services/account-error';
         @if(c.valorHora!==null){<p>{{c.valorHora | currency:'BRL':'symbol':'1.2-2':'pt-BR'}} / hora</p>}
         <p class="contract-status" [attr.data-status]="c.status" role="status">{{estados[c.status]}}</p>
         @if(c.legado){<p>Contrato anterior</p>}@else{<p>{{c.aceitoEm?'Contratado em':'Solicitado em'}} {{(c.aceitoEm||c.criadoEm)|date:'dd/MM/yyyy'}}</p>}
-        <a [routerLink]="['/cuidadores',c.cuidadorId]">Ver perfil →</a>
+        <a [routerLink]="['/cuidadores',c.cuidadorId]">Ver perfil <app-icon name="forward" /></a>
       </section>
       <section class="content-card profile-section"><h2>Dias contratados</h2><ul class="date-list">@for(data of c.datas;track data){<li>{{data|date:'dd/MM/yyyy':'UTC'}}</li>}</ul></section>
       <section class="content-card profile-section action-stack">

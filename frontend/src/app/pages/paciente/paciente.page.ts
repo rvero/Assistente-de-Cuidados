@@ -1,3 +1,4 @@
+import { AppIcon } from '../../components/app-icon';
 import { Component, inject, signal, effect, viewChild } from '@angular/core';
 import { FormsModule, type NgForm } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -9,7 +10,7 @@ import { PatientApi, type Paciente, type ContatoDetalhe } from '../../services/p
 
 @Component({
   selector: 'app-paciente',
-  imports: [FormsModule, RouterLink, IonContent, IonButton, IonInput, IonSelect, IonSelectOption, IonTextarea],
+  imports: [AppIcon, FormsModule, RouterLink, IonContent, IonButton, IonInput, IonSelect, IonSelectOption, IonTextarea],
   templateUrl: './paciente.page.html',
   styleUrls: ['../directory.scss'],
 })

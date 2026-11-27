@@ -3,9 +3,7 @@
     <header class="directory-header">
       <div class="header-title-row">
         <a [routerLink]="auth.usuario()?.role==='ADMIN'?'/admin':'/busca'" class="back-arrow" aria-label="Voltar"
-          ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M19 12H5m7-7-7 7 7 7" /></svg
-        ></a>
+          ><app-icon name="back" /></a>
         <h1>Perfil do cuidador</h1>
       </div>
     </header>
@@ -16,8 +14,10 @@
       <p class="notice notice-error" role="alert">{{erro()}}</p>
       <ion-button fill="outline" (click)="carregar()">Tentar novamente</ion-button>} @else if(cuidador(); as c){
       <section class="content-card public-profile">
-        <span class="avatar large" aria-hidden="true">{{c.nome.charAt(0).toUpperCase()}}</span
-        ><span class="profile-label">Cuidador</span>
+        <div class="avatar large profile-photo" aria-hidden="true">
+          @if(c.fotoUrl && !fotoFalhou()){<img [src]="c.fotoUrl" alt="" (error)="fotoFalhou.set(true)" />}
+          @else{ {{c.nome.charAt(0).toUpperCase()}} }
+        </div><span class="profile-label">Cuidador</span>
         <h2>{{c.nome}}</h2>
         <p>{{c.cidade || 'Cidade não informada'}}</p>
         <p>
@@ -25,17 +25,16 @@
           + ' / hora' : 'Valor por hora não informado'}}
         </p>
       </section>
+      @if(c.instagramUrl || c.tiktokUrl || c.curriculoUrl){<div class="profile-links">
+        @if(safeUrl(c.instagramUrl ?? null); as url){<a [href]="url" target="_blank" rel="noopener noreferrer" class="profile-link instagram"><app-icon name="instagram" /><span>Instagram</span></a>}
+        @if(safeUrl(c.tiktokUrl ?? null); as url){<a [href]="url" target="_blank" rel="noopener noreferrer" class="profile-link tiktok"><app-icon name="tiktok" /><span>TikTok</span></a>}
+        @if(safeUrl(c.curriculoUrl); as url){<a [href]="url" target="_blank" rel="noopener noreferrer" class="profile-link curriculum"><app-icon name="curriculum" /><span>Currículo</span></a>}
+      </div>}
       <section class="content-card profile-section">
-        <h2>Apresentação e experiência</h2>
-        <p class="preserve-lines">{{c.descricao || 'Sem apresentação.'}}</p>
+        <h2>Biografia</h2>
+        <p class="preserve-lines">{{c.descricao || 'Biografia não informada.'}}</p>
       </section>
-      @if(safeUrl(c.curriculoUrl); as url){<a
-        class="curriculum-link"
-        [href]="url"
-        target="_blank"
-        rel="noopener noreferrer"
-        >Consultar currículo ↗</a
-      >} @if(!c.perfilCompleto){
+      @if(!c.perfilCompleto){
       <p class="field-note">Perfil incompleto.</p>
       }}
       @if(cuidador(); as profissional){ @if(auth.usuario()?.role==='CLIENTE'){

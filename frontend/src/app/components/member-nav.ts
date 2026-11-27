@@ -1,3 +1,4 @@
+import { AppIcon } from './app-icon';
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -6,36 +7,22 @@ import { Auth } from '../services/auth';
 
 @Component({
   selector: 'app-member-nav',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [AppIcon, RouterLink, RouterLinkActive],
   template: ` <nav class="member-nav" aria-label="Navegação da conta">
     <a class="history" routerLink="/historico" routerLinkActive="selected" ariaCurrentWhenActive="page"
-      ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-        <path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z" />
-        <path d="M9 7h6M9 11h6M9 15h3" /></svg
-      ><span>Histórico</span></a
+      ><app-icon name="history" /><span>Histórico</span></a
     >
     @if (auth.usuario()?.role === 'CLIENTE') {
       <a class="activity" [routerLink]="contratos.atual()?'/contrato':'/busca'" routerLinkActive="selected" ariaCurrentWhenActive="page"
-        ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-          @if(contratos.atual()){<path d="M6 3h9l4 4v14H6V3ZM14 3v5h5M9 12h7M9 16h7"/>}
-          @else{<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>}</svg
-        ><span>{{contratos.atual()?'Contrato atual':'Buscar'}}</span></a
+        ><app-icon [name]="contratos.atual()?'contract':'search'" /><span>{{contratos.atual()?'Contrato atual':'Buscar'}}</span></a
       >
     } @else {
       <a class="activity" routerLink="/home-cuidador" routerLinkActive="selected" ariaCurrentWhenActive="page"
-        ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-          <circle cx="9" cy="8" r="3" />
-          <path d="M3 21v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 5" /></svg
-        ><span>Solicitações</span></a
+        ><app-icon name="people" /><span>Solicitações</span></a
       >
     }
     <a class="options" routerLink="/opcoes" routerLinkActive="selected" ariaCurrentWhenActive="page"
-      ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-        <path
-          d="m9 3-.6 2.2-2 .9-2-.6-2 3.5L4 10.6v2.8L2.4 15l2 3.5 2-.6 2 .9L9 21h4l.6-2.2 2-.9 2 .6 2-3.5-1.6-1.6v-2.8L19.6 9l-2-3.5-2 .6-2-.9L13 3H9Z"
-        />
-        <circle cx="11" cy="12" r="3" /></svg
-      ><span>Opções</span></a
+      ><app-icon name="settings" /><span>Opções</span></a
     >
   </nav>`,
   styles: [
@@ -68,17 +55,17 @@ import { Auth } from '../services/auth';
         font-size: 12px;
         font-weight: bold;
       }
-      svg {
+      app-icon {
         width: 26px;
         height: 26px;
       }
-      .history svg {
+      .history app-icon {
         color: #ffffff;
       }
-      .activity svg {
+      .activity app-icon {
         color: #ffffff;
       }
-      .options svg {
+      .options app-icon {
         color: #ffffff;
       }
       a.selected {

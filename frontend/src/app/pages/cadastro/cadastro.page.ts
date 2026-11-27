@@ -1,3 +1,4 @@
+import { AppIcon } from '../../components/app-icon';
 import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { NgForm } from '@angular/forms';
@@ -15,7 +16,7 @@ import { cpfValido } from '../../services/cpf';
   selector: 'app-cadastro',
   templateUrl: './cadastro.page.html',
   styleUrls: ['./cadastro.page.scss'],
-  imports: [FormsModule, RouterLink, IonButton, IonContent, IonInput, IonItem, IonRadio, IonRadioGroup],
+  imports: [AppIcon, FormsModule, RouterLink, IonButton, IonContent, IonInput, IonItem, IonRadio, IonRadioGroup],
 })
 export class CadastroPage {
   private readonly router = inject(Router);

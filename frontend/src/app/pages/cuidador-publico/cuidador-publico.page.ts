@@ -1,3 +1,4 @@
+import { AppIcon } from '../../components/app-icon';
 import { CurrencyPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -10,21 +11,23 @@ import { DirectoryApi, type CuidadorPublico } from '../../services/directory-api
 
 @Component({
   selector: 'app-cuidador-publico',
-  imports: [ CurrencyPipe, RouterLink, IonContent, IonButton],
+  imports: [AppIcon,  CurrencyPipe, RouterLink, IonContent, IonButton],
   templateUrl: './cuidador-publico.page.html',
-  styleUrls: ['../directory.scss'],
+  styleUrls: ['../directory.scss', './cuidador-publico.page.scss'],
 })
 export class CuidadorPublicoPage {
   readonly auth = inject(Auth);
   private readonly route = inject(ActivatedRoute);
   private readonly api = inject(DirectoryApi);
   readonly cuidador = signal<CuidadorPublico | null>(null);
+  readonly fotoFalhou = signal(false);
   readonly erro = signal('');
   readonly carregando = signal(true);
   ionViewWillEnter(): void {
     void this.carregar();
   }
   async carregar(): Promise<void> {
+    this.fotoFalhou.set(false);
     this.cuidador.set(null);
     this.erro.set('');
     this.carregando.set(true);

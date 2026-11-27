@@ -3,9 +3,7 @@
     <header class="directory-header">
       <div class="header-title-row">
         <a routerLink="/opcoes" class="back-arrow" aria-label="Voltar às opções"
-          ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M19 12H5m7-7-7 7 7 7" /></svg
-        ></a>
+          ><app-icon name="back" /></a>
         <h1>{{profissional()?'Editar perfil':'Editar dados da conta'}}</h1>
       </div>
     </header>
@@ -131,6 +129,16 @@
           <p class="section-description">
             Exibidos no perfil público.
           </p>
+          <div class="photo-editor">
+            <div class="photo-preview" aria-hidden="true">
+              @if(cuidador.fotoUrl && !fotoFalhou()){<img [src]="cuidador.fotoUrl" alt="" (error)="fotoFalhou.set(true)" />}
+              @else{<app-icon name="camera" />}
+            </div>
+            <input #fotoInput type="file" accept="image/jpeg,image/png" hidden (change)="enviarFoto($event)" />
+            <ion-button type="button" fill="outline" (click)="fotoInput.click()" [disabled]="salvando() || enviandoFoto()"><app-icon name="camera" /> {{enviandoFoto()?'Enviando…':'Escolher foto'}}</ion-button>
+            @if(cuidador.fotoUrl){<button type="button" class="remove-photo" (click)="cuidador.fotoUrl=null" [disabled]="salvando() || enviandoFoto()">Remover foto</button>}
+            <p class="field-note">JPG ou PNG, até 2 MB.</p>
+          </div>
           <div class="field">
             <span class="input-label" id="perfil-cidade">Cidade de atendimento</span
             ><ion-input
@@ -173,7 +181,7 @@
             ></ion-input>
           </div>
           <div class="field">
-            <span class="input-label" id="perfil-descricao">Experiência profissional</span
+            <span class="input-label" id="perfil-descricao">Biografia</span
             ><ion-textarea
               fill="outline"
               aria-labelledby="perfil-descricao"
@@ -185,6 +193,8 @@
               [disabled]="salvando()"
             ></ion-textarea>
           </div>
+          <div class="field"><span class="input-label" id="perfil-instagramUrl">Instagram (opcional)</span><ion-input fill="outline" aria-labelledby="perfil-instagramUrl" name="instagramUrl" [(ngModel)]="cuidador.instagramUrl" type="url" maxlength="500" pattern="https://(www[.])?instagram[.]com/[A-Za-z0-9._]+/?" placeholder="https://www.instagram.com/seuperfil" [disabled]="salvando()" /></div>
+          <div class="field"><span class="input-label" id="perfil-tiktokUrl">TikTok (opcional)</span><ion-input fill="outline" aria-labelledby="perfil-tiktokUrl" name="tiktokUrl" [(ngModel)]="cuidador.tiktokUrl" type="url" maxlength="500" pattern="https://(www[.])?tiktok[.]com/@[A-Za-z0-9._]+/?" placeholder="https://www.tiktok.com/@seuperfil" [disabled]="salvando()" /></div>
           <div class="field">
             <span class="input-label" id="perfil-curriculoUrl">Link do currículo (opcional)</span
             ><ion-input
@@ -200,7 +210,7 @@
           </div>
         </section>
         }
-        <ion-button type="submit" expand="block" [disabled]="salvando()"
+        <ion-button type="submit" expand="block" [disabled]="salvando() || enviandoFoto()"
           >{{salvando()?'Salvando…':'Salvar alterações'}}</ion-button
         >
       </form>

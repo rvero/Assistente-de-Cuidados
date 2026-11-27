@@ -1,3 +1,4 @@
+import { AppIcon } from './app-icon';
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ContratoApi } from '../services/contrato-api';
@@ -8,14 +9,14 @@ import { firstValueFrom } from 'rxjs';
 import { AgendaApi, DIAS, dataLocal, type Calendario } from '../services/agenda-api';
 import { accountError } from '../services/account-error';
 @Component({
-  selector: 'app-booking', imports: [IonButton, DatePipe, RouterLink],
+  selector: 'app-booking', imports: [AppIcon, IonButton, DatePipe, RouterLink],
   template: `<section class="content-card profile-section">
     <h2>Selecione os dias</h2>
     @if (sucesso()) { <p class="notice notice-success" role="status">{{sucesso()}}</p> }
     @if (erro()) { <p class="notice notice-error" role="alert">{{erro()}}</p><ion-button fill="outline" (click)="carregar()" [disabled]="enviando()">Atualizar datas</ion-button> }
-    <div class="month-nav"><button type="button" aria-label="Mês anterior" (click)="mudarMes(-1)" [disabled]="primeiroMes() || carregando() || enviando()">‹</button>
+    <div class="month-nav"><button type="button" aria-label="Mês anterior" (click)="mudarMes(-1)" [disabled]="primeiroMes() || carregando() || enviando()"><app-icon name="previous" /></button>
       <h3 aria-live="polite">{{titulo()}}</h3>
-      <button type="button" aria-label="Próximo mês" (click)="mudarMes(1)" [disabled]="carregando() || enviando()">›</button></div>
+      <button type="button" aria-label="Próximo mês" (click)="mudarMes(1)" [disabled]="carregando() || enviando()"><app-icon name="next" /></button></div>
     <p class="legend">Cinza: indisponível</p>
     @if(carregando()) { <p role="status">Carregando datas…</p> }
     <div class="calendar" [attr.aria-busy]="carregando()">
@@ -27,7 +28,7 @@ import { accountError } from '../services/account-error';
     </div>
     @if(selecionadas().length) {
       <h3>Datas selecionadas</h3><div class="selected-days">
-        @for(data of selecionadas(); track data) { <button type="button" (click)="alternar(data)" [disabled]="enviando()" [attr.aria-label]="'Remover '+data">{{data | date:'dd/MM/yyyy':'UTC'}} ×</button> }
+        @for(data of selecionadas(); track data) { <button type="button" (click)="alternar(data)" [disabled]="enviando()" [attr.aria-label]="'Remover '+data">{{data | date:'dd/MM/yyyy':'UTC'}} <app-icon name="close" /></button> }
       </div>
     }
     <div class="booking-footer">

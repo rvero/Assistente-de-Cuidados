@@ -1,3 +1,4 @@
+import { AppIcon } from '../../components/app-icon';
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonContent, IonButton } from '@ionic/angular';
@@ -6,11 +7,11 @@ import { Auth } from '../../services/auth';
 import { AgendaApi, DIAS } from '../../services/agenda-api';
 import { accountError } from '../../services/account-error';
 @Component({
-  selector:'app-agenda', imports:[RouterLink,IonContent,IonButton],
+  selector:'app-agenda', imports: [AppIcon, RouterLink,IonContent,IonButton],
   styleUrls:['../directory.scss'],
   styles:[`.days{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;} .days label{display:flex;align-items:center;gap:10px;min-height:48px;} input{width:20px;height:20px;accent-color:#2f7d6e;}`],
   template:`<ion-content><main class="app-shell directory-screen"><header class="directory-header"><div class="header-title-row">
-    <a routerLink="/opcoes" class="back-arrow" aria-label="Voltar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5m7-7-7 7 7 7"/></svg></a><h1>Editar agenda</h1>
+    <a routerLink="/opcoes" class="back-arrow" aria-label="Voltar"><app-icon name="back" /></a><h1>Editar agenda</h1>
     </div></header><div class="page-body">
     @if(carregando()){<p role="status">Carregando agenda…</p>}
     @else if(erroCarga()){<p class="notice notice-error" role="alert">{{erroCarga()}}</p><ion-button fill="outline" (click)="carregar()">Tentar novamente</ion-button>}
