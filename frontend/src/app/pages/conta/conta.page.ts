@@ -1,3 +1,4 @@
+import { usuarioSocial, linkSocial } from '../../services/social-profile';
 import { AppIcon } from '../../components/app-icon';
 import { Component, computed, inject, signal, effect, viewChild } from '@angular/core';
 import { FormsModule, type NgForm } from '@angular/forms';
@@ -39,6 +40,8 @@ export class ContaPage {
     descricao: '',
     curriculoUrl: '',
   };
+  usuarioInstagram = '';
+  usuarioTiktok = '';
   nome = '';
   email = '';
   cpf = '';
@@ -87,6 +90,8 @@ export class ContaPage {
           curriculoUrl: '',
           ...profile,
         };
+        this.usuarioInstagram = usuarioSocial(profile?.instagramUrl, 'instagram');
+        this.usuarioTiktok = usuarioSocial(profile?.tiktokUrl, 'tiktok');
       }
     } catch (e) {
       if (version === this.version) {
@@ -150,8 +155,8 @@ export class ContaPage {
               nomeCuidador: this.cuidador.nomeCuidador.trim(),
               nomeSocial: '',
               curriculoUrl: this.cuidador.curriculoUrl?.trim() ?? '',
-              instagramUrl: this.cuidador.instagramUrl?.trim() ?? '',
-              tiktokUrl: this.cuidador.tiktokUrl?.trim() ?? '',
+              instagramUrl: linkSocial(this.usuarioInstagram, 'instagram'),
+              tiktokUrl: linkSocial(this.usuarioTiktok, 'tiktok'),
               cidade: this.cuidador.cidade?.trim() || null,
               valorHora:
                 this.cuidador.valorHora == null || String(this.cuidador.valorHora) === ''

@@ -193,8 +193,8 @@
               [disabled]="salvando()"
             ></ion-textarea>
           </div>
-          <div class="field"><span class="input-label" id="perfil-instagramUrl">Instagram (opcional)</span><ion-input fill="outline" aria-labelledby="perfil-instagramUrl" name="instagramUrl" [(ngModel)]="cuidador.instagramUrl" type="url" maxlength="500" pattern="https://(www[.])?instagram[.]com/[A-Za-z0-9._]+/?" placeholder="https://www.instagram.com/seuperfil" [disabled]="salvando()" /></div>
-          <div class="field"><span class="input-label" id="perfil-tiktokUrl">TikTok (opcional)</span><ion-input fill="outline" aria-labelledby="perfil-tiktokUrl" name="tiktokUrl" [(ngModel)]="cuidador.tiktokUrl" type="url" maxlength="500" pattern="https://(www[.])?tiktok[.]com/@[A-Za-z0-9._]+/?" placeholder="https://www.tiktok.com/@seuperfil" [disabled]="salvando()" /></div>
+          <div class="field"><span class="input-label" id="perfil-instagramUrl">Usuário do Instagram (opcional)</span><ion-input fill="outline" aria-labelledby="perfil-instagramUrl" name="instagramUrl" [(ngModel)]="usuarioInstagram" type="text" maxlength="100" pattern="@?[A-Za-z0-9._]+" placeholder="@seuusuario" autocomplete="off" autocapitalize="off" [spellcheck]="false" [disabled]="salvando()" /></div>
+          <div class="field"><span class="input-label" id="perfil-tiktokUrl">Usuário do TikTok (opcional)</span><ion-input fill="outline" aria-labelledby="perfil-tiktokUrl" name="tiktokUrl" [(ngModel)]="usuarioTiktok" type="text" maxlength="100" pattern="@?[A-Za-z0-9._]+" placeholder="@seuusuario" autocomplete="off" autocapitalize="off" [spellcheck]="false" [disabled]="salvando()" /></div>
           <div class="field">
             <span class="input-label" id="perfil-curriculoUrl">Link do currículo (opcional)</span
             ><ion-input
