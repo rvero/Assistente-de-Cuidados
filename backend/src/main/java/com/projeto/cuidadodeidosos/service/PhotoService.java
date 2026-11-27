@@ -39,6 +39,7 @@ public class PhotoService {
         if (file.isEmpty() || file.getSize() > 2 * 1024 * 1024)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Escolha uma imagem JPG ou PNG de até 2 MB.");
         byte[] image = preparar(file);
+        String etapa = "preparar-envio";
         try {
             String id = "cuidadores/" + owner + "/" + UUID.randomUUID();
             String timestamp = Long.toString(Instant.now().getEpochSecond());
@@ -48,14 +49,30 @@ public class PhotoService {
             form.add("file", new ByteArrayResource(image) { @Override public String getFilename() { return "perfil.jpg"; } });
             form.add("public_id", id); form.add("timestamp", timestamp);
             form.add("api_key", key); form.add("signature", signature);
+            etapa = "enviar-cloudinary";
             var response = client().post()
                 .uri("https://api.cloudinary.com/v1_1/" + cloud + "/image/upload")
                 .contentType(MediaType.MULTIPART_FORM_DATA).body(form).retrieve().body(Map.class);
+            etapa = "validar-resposta";
             String url = response == null ? null : (String) response.get("secure_url");
             if (url == null) throw new IOException("Missing upload URL");
             validarUrl(url, owner);
             return url;
         } catch (Exception e) {
+            String status = "sem-resposta", categoria = "erro-interno";
+            if (e instanceof org.springframework.web.client.RestClientResponseException http) {
+                status = Integer.toString(http.getStatusCode().value());
+                String body = http.getResponseBodyAsString().toLowerCase(Locale.ROOT);
+                categoria = body.contains("signature") ? "assinatura" :
+                    body.contains("api_key") || body.contains("api key") ? "chave-api" :
+                    body.contains("cloud name") || body.contains("disabled") ? "ambiente-cloudinary" :
+                    body.contains("quota") || body.contains("limit") ? "limite-cloudinary" : "rejeitado-cloudinary";
+            } else if (e instanceof org.springframework.web.client.ResourceAccessException) categoria = "conexao-cloudinary";
+            String causas = e.getClass().getSimpleName();
+            for (Throwable cause=e.getCause(); cause!=null && causas.length()<250; cause=cause.getCause()) causas += "/"+cause.getClass().getSimpleName();
+            // Never log response bodies, exception messages, signatures, credentials or image bytes.
+            org.slf4j.LoggerFactory.getLogger(PhotoService.class).warn(
+                "Falha upload foto: etapa={}, status={}, categoria={}, tipos={}", etapa, status, categoria, causas);
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Não foi possível enviar a foto. Tente novamente.");
         }
     }
