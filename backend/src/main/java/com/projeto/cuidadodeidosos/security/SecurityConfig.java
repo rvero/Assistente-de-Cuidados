@@ -31,16 +31,34 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(auth -> auth
+                        // Healthcheck e tratamento interno de erros do Spring (necessário para páginas de erro funcionarem)
                         .requestMatchers("/api/health").permitAll()
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/", "/index.html", "/inicio", "/login", "/cadastro", "/perfil", "/home-cliente", "/home-cuidador", "/busca", "/cuidadores/*", "/admin", "/historico", "/agenda", "/contrato", "/contratar/*", "/solicitacoes/*", "/admin/contratos", "/contatos", "/opcoes", "/opcoes/conta", "/opcoes/paciente", "/contatos/*", "/*.js", "/*.css", "/assets/**", "/favicon.ico").permitAll()
+
+                        // Páginas públicas do front-end (views renderizadas) e arquivos estáticos (JS/CSS/assets)
+                        .requestMatchers("/", "/index.html", "/inicio", "/login", "/cadastro", "/perfil",
+                                "/home-cliente", "/home-cuidador", "/busca", "/cuidadores/*", "/admin",
+                                "/historico", "/agenda", "/contrato", "/contratar/*", "/solicitacoes/*",
+                                "/admin/contratos", "/contatos", "/opcoes", "/opcoes/conta",
+                                "/opcoes/paciente", "/contatos/*", "/*.js", "/*.css", "/assets/**",
+                                "/favicon.ico").permitAll()
+
+                        // Endpoints de autenticação (login/cadastro) — precisam ser públicos para o usuário conseguir logar
                         .requestMatchers("/auth/**", "/api/auth/**").permitAll()
+
+                        // Áreas restritas por papel (role) do usuário autenticado
                         .requestMatchers("/cuidador/**", "/api/cuidador/**").hasRole("CUIDADOR")
                         .requestMatchers("/cliente/**", "/api/cliente/**").hasRole("CLIENTE")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/conta", "/api/conta/**").hasAnyRole("CLIENTE", "CUIDADOR")
+
+                        // Regra específica: somente CLIENTE pode iniciar contato com um cuidador (POST)
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/cuidadores/*/contato").hasRole("CLIENTE")
+
+                        // Cuidador gerencia os contatos que recebeu
                         .requestMatchers("/api/contatos", "/api/contatos/**").hasRole("CUIDADOR")
+
+                        // Fallback de segurança: qualquer rota não listada acima exige autenticação
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthFilter(jwtService, users), UsernamePasswordAuthenticationFilter.class);
         return http.build();
